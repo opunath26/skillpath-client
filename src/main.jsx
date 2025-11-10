@@ -15,10 +15,10 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        path: Home,
+        Component: Home,
       },
       {
-        path: 'allCourses',
+        path: '/allCourses',
         Component: AllCourses
       }
     ]
@@ -29,6 +29,6 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />,
+    <RouterProvider router={router} />
   </StrictMode>,
 )
