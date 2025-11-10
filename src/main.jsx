@@ -10,6 +10,7 @@ import AllCourses from './pages/Courses/AllCourses.jsx';
 import AuthProvider from './context/AuthProvider.jsx';
 import Register from './pages/Auth/Register.jsx';
 import { Toaster } from "react-hot-toast";
+import Login from './pages/Auth/Login.jsx';
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: '/register',
         Component: Register
+      },
+      {
+        path: '/login',
+        Component: Login
       }
     ]
   },
