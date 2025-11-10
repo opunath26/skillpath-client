@@ -7,6 +7,9 @@ import { RouterProvider } from "react-router/dom";
 import RootLayout from './layout/RootLayout.jsx';
 import Home from './pages/Home/Home.jsx';
 import AllCourses from './pages/Courses/AllCourses.jsx';
+import AuthProvider from './context/AuthProvider.jsx';
+import Register from './pages/Auth/Register.jsx';
+import { Toaster } from "react-hot-toast";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: '/allCourses',
         Component: AllCourses
+      },
+      {
+        path: '/register',
+        Component: Register
       }
     ]
   },
@@ -29,6 +36,9 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
+    <Toaster position="top-center" reverseOrder={false} />
   </StrictMode>,
 )
