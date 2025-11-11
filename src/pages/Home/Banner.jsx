@@ -1,4 +1,3 @@
-// Banner.jsx
 import React from "react";
 
 const Banner = () => {

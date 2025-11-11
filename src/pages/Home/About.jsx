@@ -1,4 +1,3 @@
-// About.jsx
 import React from "react";
 import aboutImg from "../../assets/About.avif";
 const About = () => {
