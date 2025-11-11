@@ -5,16 +5,16 @@ const TopInstructors = () => {
   const [instructors, setInstructors] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/instructors") // তোমার backend URL
+    fetch("http://localhost:3000/instructors")
       .then((res) => res.json())
-      .then((data) => setInstructors(data.slice(0, 4))) // শুধু প্রথম ৪ জন
+      .then((data) => setInstructors(data.slice(0, 4)))
       .catch((err) => console.error(err));
   }, []);
 
   return (
     <div className="bg-gradient-to-br from-[#e0f7fa] via-[#f1f8e9] to-[#fce4ec] py-20">
       <h2 className="mb-12 font-extrabold text-gray-800 text-4xl text-center tracking-wide">
-        🌟 Top Instructors
+        Meet Our Expert Instructor
       </h2>
 
       <div className="gap-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 px-8">
