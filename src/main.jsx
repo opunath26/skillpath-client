@@ -14,6 +14,7 @@ import Login from './pages/Auth/Login.jsx';
 import AddCourse from './pages/Courses/AddCourse.jsx';
 import MyCourses from './pages/Courses/MyCourses.jsx';
 
+
 const router = createBrowserRouter([
   {
     path: "/",
