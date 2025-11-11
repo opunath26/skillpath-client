@@ -17,19 +17,26 @@ const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   //  Create new user and update profile
-  const createUser = (email, password, name, photoURL) => {
-    setLoading(true);
-    return createUserWithEmailAndPassword(auth, email, password)
-      .then((result) => {
-        //  Update displayName & photoURL
-        if (name || photoURL) {
-          return updateProfile(result.user, {
-            displayName: name,
-            photoURL: photoURL,
-          });
-        }
-      });
-  };
+ const createUser = (email, password, name, photoURL) => {
+  setLoading(true);
+  return createUserWithEmailAndPassword(auth, email, password)
+    .then(async (result) => {
+        const user = result.user;
+      if (name || photoURL) {
+        await    updateProfile(user, {
+          displayName: name,
+          photoURL: photoURL,
+        }).then(() => result.user);
+      }
+      return user;
+    })
+    .catch(error => {
+      console.error(error);
+      setLoading(false);
+      throw error;
+    });
+};
+
 
   //  Sign in user (email + password)
   const signInUser = (email, password) => {

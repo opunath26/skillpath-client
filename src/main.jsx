@@ -11,6 +11,8 @@ import AuthProvider from './context/AuthProvider.jsx';
 import Register from './pages/Auth/Register.jsx';
 import { Toaster } from "react-hot-toast";
 import Login from './pages/Auth/Login.jsx';
+import AddCourse from './pages/Courses/AddCourse.jsx';
+import MyCourses from './pages/Courses/MyCourses.jsx';
 
 const router = createBrowserRouter([
   {
@@ -26,13 +28,21 @@ const router = createBrowserRouter([
         Component: AllCourses
       },
       {
+        path: '/myCourses',
+        element: <MyCourses></MyCourses>
+      },
+      {
+        path: '/addCourse',
+        element: <AddCourse></AddCourse>
+      },
+      {
         path: '/register',
         Component: Register
       },
       {
         path: '/login',
         Component: Login
-      }
+      },
     ]
   },
 ]);

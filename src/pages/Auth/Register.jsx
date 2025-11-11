@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import { FaUser, FaLock, FaEnvelope, FaImage, FaGoogle } from "react-icons/fa";
 import { AuthContext } from "../../context/AuthProvider";
-import Swal from "sweetalert2"
+import Swal from "sweetalert2";
 
 const Register = () => {
   const { createUser, signInWithGoogle } = useContext(AuthContext);
@@ -20,39 +20,85 @@ const Register = () => {
     setError("");
 
     createUser(email, password, name, photoURL)
-  .then(() => {
-    Swal.fire({
-      position: "top-center",
-      icon: "success",
-      title: "Registration Successful!",
-      showConfirmButton: false,
-      timer: 2000,
-      toast: true,
-      background: "#39b8ad",
-      color: "#fff",
-    });
-    form.reset();
-    navigate("/");
-  })
-  .catch((err) => {
-    Swal.fire({
-      position: "top-center",
-      icon: "error",
-      title: "Registration Failed!",
-      text: err.message,
-      showConfirmButton: false,
-      timer: 2500,
-      toast: true,
-    });
-    setError(err.message);
-  });
+      .then((user) => {
+         console.log("Registered user:", user);
+        Swal.fire({
+          position: "top-center",
+          icon: "success",
+          title: "Registration Successful!",
+          showConfirmButton: false,
+          timer: 2000,
+          toast: true,
+          background: "#39b8ad",
+          color: "#fff",
+        });
 
+        // Backend e save korar data
+        const newUser = { name, email, photoURL };
+
+        // 🔥 User save to MongoDB
+        fetch("http://localhost:3000/users", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newUser),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("✅ User saved to DB:", data);
+          })
+          .catch((err) => {
+            console.error("❌ Error saving user:", err);
+          });
+
+        form.reset();
+        navigate("/");
+      })
+      .catch((err) => {
+        console.error("Firebase registration error:", err);
+        Swal.fire({
+          position: "top-center",
+          icon: "error",
+          title: "Registration Failed!",
+          text: err.message,
+          showConfirmButton: false,
+          timer: 2500,
+          toast: true,
+        });
+        setError(err.message);
+      });
   };
 
+  // 🔹 Google sign-in handler
   const handleGoogleSignIn = () => {
     signInWithGoogle()
-      .then(() => {
-        console.log("✅ Google Sign-in successful!");
+      .then((result) => {
+        const googleUser = result.user;
+        const newUser = {
+          name: googleUser.displayName,
+          email: googleUser.email,
+          photoURL: googleUser.photoURL,
+        };
+
+        // Google user save to DB
+        fetch("http://localhost:3000/users", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newUser),
+        });
+
+        Swal.fire({
+          position: "top-center",
+          icon: "success",
+          title: "Google Sign-in Successful!",
+          showConfirmButton: false,
+          timer: 2000,
+          toast: true,
+          background: "#39b8ad",
+          color: "#fff",
+        });
+
         navigate("/");
       })
       .catch((err) => {
@@ -116,9 +162,7 @@ const Register = () => {
           </div>
 
           {/* Error message */}
-          {error && (
-            <p className="text-red-500 text-sm text-center">{error}</p>
-          )}
+          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
           {/* Register button */}
           <button
