@@ -1,4 +1,3 @@
-// WhyChooseUs.jsx
 import React from "react";
 import { FaChalkboardTeacher, FaLaptopCode, FaUsers, FaAward } from "react-icons/fa";
 
