@@ -13,6 +13,7 @@ import { Toaster } from "react-hot-toast";
 import Login from './pages/Auth/Login.jsx';
 import AddCourse from './pages/Courses/AddCourse.jsx';
 import MyCourses from './pages/Courses/MyCourses.jsx';
+import CourseDetails from './pages/Courses/CourseDetails.jsx';
 
 
 const router = createBrowserRouter([
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: '/addCourse',
         element: <AddCourse></AddCourse>
+      },
+      {
+        path: '/courseDetails',
+        element: <CourseDetails></CourseDetails>
       },
       {
         path: '/register',

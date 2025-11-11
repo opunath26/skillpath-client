@@ -2,7 +2,7 @@ import React from "react";
 import aboutImg from "../../assets/About.avif";
 const About = () => {
   return (
-    <section className="bg-gray-50 py-20">
+    <section className="bg-gray-50 mt-20 py-20">
       <div className="flex md:flex-row flex-col-reverse items-center gap-10 mx-auto px-4 md:px-10 max-w-7xl">
         
         {/* Text Content */}

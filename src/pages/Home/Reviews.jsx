@@ -59,7 +59,7 @@ const Reviews = () => {
     };
 
     return (
-        <section className="relative bg-gradient-to-r from-[#39b8ad]/20 via-[#2ea99f]/20 to-[#39b8ad]/20 py-20 overflow-hidden">
+        <section className="relative bg-gradient-to-r from-[#39b8ad]/20 via-[#2ea99f]/20 to-[#39b8ad]/20 mt-20 py-20 overflow-hidden">
             {/* Soft parallax shapes */}
             <div className="top-0 left-0 absolute bg-[#39b8ad]/10 blur-3xl rounded-full w-72 h-72 animate-blob mix-blend-multiply filter"></div>
             <div className="right-0 bottom-0 absolute bg-[#2ea99f]/10 blur-3xl rounded-full w-96 h-96 animate-blob animation-delay-2000 mix-blend-multiply filter"></div>
