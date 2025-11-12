@@ -14,6 +14,7 @@ import Login from './pages/Auth/Login.jsx';
 import AddCourse from './pages/Courses/AddCourse.jsx';
 import MyCourses from './pages/Courses/MyCourses.jsx';
 import CourseDetails from './pages/Courses/CourseDetails.jsx';
+import EnrollModal from './pages/Courses/EnrollModal.jsx';
 
 
 const router = createBrowserRouter([
@@ -30,12 +31,20 @@ const router = createBrowserRouter([
         Component: AllCourses
       },
       {
+        path: '/enrollModal',
+        element: <EnrollModal></EnrollModal>
+      },
+      {
         path: '/myCourses',
         element: <MyCourses></MyCourses>
       },
       {
         path: '/addCourse',
         element: <AddCourse></AddCourse>
+      },
+      {
+        path: '/myCourse',
+        element: <MyCourses></MyCourses>
       },
       {
         path: '/courseDetails/:id',

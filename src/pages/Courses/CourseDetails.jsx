@@ -1,9 +1,12 @@
-import React from "react";
-import { useLoaderData, Link } from "react-router";
+import React, { useContext } from "react";
+import { useLoaderData, useNavigate } from "react-router";
 import { FaUsers, FaClock, FaStar } from "react-icons/fa";
+import { AuthContext } from "../../context/AuthProvider.jsx";
 
 const CourseDetails = () => {
   const course = useLoaderData();
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate(); // useNavigate hook
 
   if (!course) {
     return (
@@ -14,6 +17,10 @@ const CourseDetails = () => {
       </div>
     );
   }
+
+  const handleEnroll = () => {
+  navigate(`/enrollModal/${course._id}`); //  course._id path param 
+};
 
   return (
     <div className="mx-auto mt-10 p-6 max-w-5xl">
@@ -35,17 +42,14 @@ const CourseDetails = () => {
             <FaClock className="text-[#39b8ad]" /> {course.duration}
           </p>
           <p className="flex items-center gap-2">
-            <FaUsers className="text-[#39b8ad]" />{" "}
-            {course.students?.length || 0} Students
+            <FaUsers className="text-[#39b8ad]" /> {course.students?.length || 0} Students
           </p>
           <p className="flex items-center gap-2">
             <FaStar className="text-yellow-500" /> {course.rating}
           </p>
         </div>
 
-        <p className="mt-6 text-gray-700 leading-relaxed">
-          {course.description}
-        </p>
+        <p className="mt-6 text-gray-700 leading-relaxed">{course.description}</p>
       </div>
 
       {/* Instructor Info */}
@@ -56,24 +60,20 @@ const CourseDetails = () => {
           className="border-[#39b8ad] border-2 rounded-full w-16 h-16 object-cover"
         />
         <div>
-          <h4 className="font-semibold text-gray-800 text-lg">
-            {course.instructorName}
-          </h4>
+          <h4 className="font-semibold text-gray-800 text-lg">{course.instructorName}</h4>
           <p className="text-gray-600 text-sm">{course.instructorEmail}</p>
         </div>
       </div>
 
       {/* Price + Enroll Button */}
       <div className="flex justify-between items-center mt-8 pt-6 border-t">
-        <h3 className="font-bold text-[#39b8ad] text-2xl">
-          Price: ${course.price}
-        </h3>
-        <Link
-          to="/enroll"
+        <h3 className="font-bold text-[#39b8ad] text-2xl">Price: ${course.price}</h3>
+        <button
+          onClick={handleEnroll}
           className="bg-[#39b8ad] hover:bg-[#2fa097] px-6 py-3 rounded-full font-semibold text-white transition-all"
         >
           Enroll Now
-        </Link>
+        </button>
       </div>
     </div>
   );
