@@ -38,8 +38,16 @@ const router = createBrowserRouter([
         element: <AddCourse></AddCourse>
       },
       {
-        path: '/courseDetails',
-        element: <CourseDetails></CourseDetails>
+        path: '/courseDetails/:id',
+        element: <CourseDetails></CourseDetails>,
+        loader: async ({ params }) => {
+          const res = await fetch(`http://localhost:3000/courses/${params.id}`);
+          if (!res.ok) {
+            throw new Response("Course not found", { status: res.status });
+          }
+          return res.json();
+        },
+
       },
       {
         path: '/register',
