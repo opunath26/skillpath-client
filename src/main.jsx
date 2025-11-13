@@ -54,8 +54,16 @@ const router = createBrowserRouter([
           }
           return res.json();
         },
-
       },
+      {
+        path: '/updateCourse/:id',
+        element: (
+          <UpdateCourse />
+        ),
+        loader:  ({ params }) => {
+         return fetch(`http://localhost:3000/courses/${params.id}`);
+      },
+    },
       {
         path: '/register',
         Component: Register
