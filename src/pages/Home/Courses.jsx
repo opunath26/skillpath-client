@@ -43,7 +43,7 @@ const Courses = () => {
                 className="py-2 rounded-full w-full font-semibold text-white"
                 style={{ backgroundColor: "#39b8ad" }}
               >
-                Enroll Now
+                View Details
               </button>
             </div>
           </div>
