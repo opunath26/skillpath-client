@@ -1,58 +1,40 @@
-// import React, { useState } from "react";
-import React, { use } from "react";
+import React, { useContext } from "react";
+import { useNavigate } from "react-router";
 import { AuthContext } from "../../context/AuthProvider";
-import { form } from "framer-motion/client";
 
 const AddCourse = () => {
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-    const { user } = use(AuthContext)
-    
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        
-        const formData = {
-            title: e.target.title.value,
-            category: e.target.category.value,
-            description: e.target.description.value,
-            thumbnail: e.target.thumbnail.value,
-            price: 500,
-            instructorName: user.email
-        };
+    const formData = {
+      title: e.target.title.value,
+      category: e.target.category.value,
+      description: e.target.description.value,
+      thumbnail: e.target.thumbnail.value,
+      price: 500,
+      instructorName: user?.email || "unknown",
+    };
 
-        fetch('http://localhost:3000/courses', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
+    fetch("http://localhost:3000/courses", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
     })
-    .then(res => res.json())
-    .then(data => {
-        console.log(data);
-    })
-    .catch(err => {
-        console.log(err);
-    });
-};
-
-//   const [formData, setFormData] = useState({
-//     name: "",
-//     category: "",
-//     description: "",
-//     thumbnail: "",
-//   });
-
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData({ ...formData, [name]: value });
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     console.log("Course Data:", formData);
-//     // এখানে axios.post দিয়ে backend এ পাঠানো যাবে
-//   };
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Course Added:", data);
+        alert("✅ Course added successfully!");
+        navigate("/dashboard"); 
+      })
+      .catch((err) => {
+        console.error("Error:", err);
+      });
+  };
 
   return (
     <div className="flex justify-center items-center bg-gray-100 min-h-screen">
@@ -61,8 +43,8 @@ const AddCourse = () => {
           Add New Course
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-2">
-          {/* Name */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Title */}
           <div>
             <label className="block mb-1 font-medium text-gray-700">
               Title
@@ -70,9 +52,7 @@ const AddCourse = () => {
             <input
               type="text"
               name="title"
-              placeholder="Enter course name"
-            //   value={formData.name}
-            //   onChange={handleChange}
+              placeholder="Enter course title"
               className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
               required
             />
@@ -85,8 +65,6 @@ const AddCourse = () => {
             </label>
             <select
               name="category"
-            //   value={formData.category}
-            //   onChange={handleChange}
               className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
               required
             >
@@ -111,15 +89,13 @@ const AddCourse = () => {
             <textarea
               name="description"
               placeholder="Write course description..."
-            //   value={formData.description}
-            //   onChange={handleChange}
               rows="4"
               className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
               required
             ></textarea>
           </div>
 
-          {/* Thumbnail URL */}
+          {/* Thumbnail */}
           <div>
             <label className="block mb-1 font-medium text-gray-700">
               Thumbnail URL
@@ -128,14 +104,12 @@ const AddCourse = () => {
               type="text"
               name="thumbnail"
               placeholder="Enter image URL"
-            //   value={formData.thumbnail}
-            //   onChange={handleChange}
               className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
               required
             />
           </div>
 
-          {/* Submit Button */}
+          {/* Submit */}
           <button
             type="submit"
             className="bg-indigo-600 hover:bg-indigo-700 py-2 rounded-lg w-full font-semibold text-white transition duration-300"

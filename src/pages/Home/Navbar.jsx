@@ -57,7 +57,7 @@ const Navbar = () => {
         user && <>
             <li>
         <NavLink
-          to="/myCourses"
+          to="/Dashboard"
           className={({ isActive }) =>
             `relative px-3 py-2 text-lg font-medium transition duration-300
             ${isActive ? "text-[#39b8ad]" : "text-gray-700 hover:text-[#39b8ad]"}
@@ -67,24 +67,10 @@ const Navbar = () => {
             ${isActive ? "after:scale-x-100" : ""}`
           }
         >
-          My Courses
+          Dashboard
         </NavLink>
       </li>
-            <li>
-        <NavLink
-          to="/addCourse"
-          className={({ isActive }) =>
-            `relative px-3 py-2 text-lg font-medium transition duration-300
-            ${isActive ? "text-[#39b8ad]" : "text-gray-700 hover:text-[#39b8ad]"}
-            after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full
-            after:h-[2px] after:rounded-full after:scale-x-0 after:bg-[#39b8ad]
-            after:transition-transform after:duration-300 hover:after:scale-x-100
-            ${isActive ? "after:scale-x-100" : ""}`
-          }
-        >
-          Add Course
-        </NavLink>
-      </li>
+            
 
 
         </>
