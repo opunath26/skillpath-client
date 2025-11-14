@@ -4,7 +4,7 @@ import { FaUsers, FaClock, FaStar } from "react-icons/fa";
 import { AuthContext } from "../../context/AuthProvider.jsx";
 
 const CourseDetails = () => {
-  const course = useLoaderData();
+  const { result: course } = useLoaderData();
   const { user } = useContext(AuthContext);
   const navigate = useNavigate(); // useNavigate hook
 
@@ -19,7 +19,7 @@ const CourseDetails = () => {
   }
 
   const handleEnroll = () => {
-  navigate(`/enrollModal/${course._id}`); //  course._id path param 
+  navigate(`/enrollModal/${course._id}`); 
 };
 
   return (

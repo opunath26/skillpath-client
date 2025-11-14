@@ -24,7 +24,7 @@ import PrivateRoute from './pages/Auth/PrivateRoute.jsx';
 const router = createBrowserRouter([
   {
     path: "/",
-    Component:  RootLayout,
+    Component: RootLayout,
     children: [
       {
         index: true,
@@ -48,7 +48,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/addCourse',
-         element: (
+        element: (
           <PrivateRoute>
             <AddCourse />
           </PrivateRoute>
@@ -62,14 +62,22 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
-      // {
-      //   path: '/courseDetails/:id',
-      //   element: (
-      //     <PrivateRoute>
-      //       <CourseDetails />
-      //     </PrivateRoute>
-      //   ),
-      // },
+      {
+        path: '/enrollModal/:id', // :id path এ add করতে হবে
+        element: (
+          <PrivateRoute>
+            <EnrollModal />
+          </PrivateRoute>
+        ),
+        loader: async ({ params }) => {
+          const res = await fetch(`http://localhost:3000/courses/${params.id}`);
+          if (!res.ok) {
+            throw new Response("Course not found", { status: res.status });
+          }
+          const data = await res.json();
+          return data.result;
+        }
+      },
       {
         path: '/courseDetails/:id',
         element: (
@@ -90,10 +98,10 @@ const router = createBrowserRouter([
         element: (
           <UpdateCourse />
         ),
-        loader:  ({ params }) => {
-         return fetch(`http://localhost:3000/courses/${params.id}`);
+        loader: ({ params }) => {
+          return fetch(`http://localhost:3000/courses/${params.id}`);
+        },
       },
-    },
       {
         path: '/register',
         Component: Register

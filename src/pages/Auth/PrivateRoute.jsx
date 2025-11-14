@@ -12,7 +12,6 @@ const PrivateRoute = ({ children }) => {
   }
 
   if (!user) {
-    // Login page এ redirect করবে
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 

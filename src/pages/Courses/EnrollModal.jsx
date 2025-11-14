@@ -1,97 +1,80 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router";
-import axios from "axios";
-import { AuthContext } from "../../context/AuthProvider";
-import { FaSpinner } from "react-icons/fa";
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../../context/AuthProvider.jsx";
+import { useLoaderData, useNavigate } from "react-router";
 
 const EnrollModal = () => {
-  const { id } = useParams(); // courseId from URL
+  const course = useLoaderData();
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const [course, setCourse] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [enrolling, setEnrolling] = useState(false);
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: user?.email || "",
+    phone: "",
+    address: "",
+    photoUrl: user?.photoURL || "",
+    paymentOption: "",
+  });
 
-  // Fetch course data from backend
-  useEffect(() => {
-    const fetchCourse = async () => {
-      try {
-        const res = await axios.get(`http://localhost:3000/courses/${id}`);
-        setCourse(res.data);
-      } catch (err) {
-        console.error("Failed to load course:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCourse();
-  }, [id]);
+  const [submitting, setSubmitting] = useState(false);
 
-  // Enroll handler
-  const handleEnroll = async () => {
-    if (!user?.email) {
-      alert("Please login first to enroll!");
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!user) {
+      alert("Please login first!");
       navigate("/login");
       return;
     }
 
     const enrollmentData = {
       courseId: course._id,
-      studentEmail: user.email,
       courseTitle: course.title,
       price: course.price,
+      studentEmail: formData.email,
+      fullName: formData.fullName,
+      phone: formData.phone,
+      address: formData.address,
+      photoUrl: course.photoUrl,
+      paymentOption: formData.paymentOption,
       createdAt: new Date(),
     };
 
     try {
-      setEnrolling(true);
-      const res = await axios.post("http://localhost:3000/enroll", enrollmentData);
+      setSubmitting(true);
+      const res = await fetch("http://localhost:3000/enrollments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(enrollmentData),
+      });
 
-      if (res.data.success) {
-        alert("✅ Successfully Enrolled!");
-        navigate("/myCourses");
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        alert("✅ Successfully enrolled!");
+        navigate("/myCourse"); 
       } else {
-        alert(res.data.message || "Something went wrong!");
+        alert(data.message || "⚠️ Enrollment failed!");
       }
     } catch (error) {
-      console.error("Enrollment failed:", error);
-      alert("⚠️ Failed to enroll. Try again!");
+      console.error(error);
+      alert("⚠️ Enrollment failed! Try again.");
     } finally {
-      setEnrolling(false);
+      setSubmitting(false);
     }
   };
-
-  // Loading state
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <FaSpinner className="text-[#39b8ad] text-3xl animate-spin" />
-        <p className="ml-3 font-semibold text-gray-700 text-lg">
-          Loading course details...
-        </p>
-      </div>
-    );
-  }
-
-  // Course not found
-  if (!course) {
-    return (
-      <p className="mt-10 text-gray-500 text-center">Course not found!</p>
-    );
-  }
 
   return (
     <div className="bg-white shadow-lg mx-auto mt-10 p-6 rounded-2xl max-w-2xl">
       <h2 className="mb-4 font-bold text-gray-800 text-2xl">
         Enroll in: {course.title}
       </h2>
-
-      <img
-        src={course.image}
-        alt={course.title}
-        className="mb-5 rounded-xl w-full h-60 object-cover"
-      />
 
       <p className="mb-3 text-gray-600">{course.description}</p>
       <p className="mb-3 font-semibold text-gray-700">
@@ -101,15 +84,74 @@ const EnrollModal = () => {
         Price: ${course.price}
       </p>
 
-      <button
-        onClick={handleEnroll}
-        disabled={enrolling}
-        className={`${
-          enrolling ? "bg-gray-400" : "bg-[#39b8ad] hover:bg-[#2fa097]"
-        } text-white px-6 py-3 rounded-full font-semibold transition-all`}
-      >
-        {enrolling ? "Enrolling..." : "Confirm Enroll"}
-      </button>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <input
+          type="text"
+          name="fullName"
+          placeholder="Full Name"
+          value={formData.fullName}
+          onChange={handleChange}
+          required
+          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-[#39b8ad] focus:ring-2"
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-[#39b8ad] focus:ring-2"
+        />
+        <input
+          type="text"
+          name="phone"
+          placeholder="Phone Number"
+          value={formData.phone}
+          onChange={handleChange}
+          required
+          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-[#39b8ad] focus:ring-2"
+        />
+        <input
+          type="text"
+          name="address"
+          placeholder="Address"
+          value={formData.address}
+          onChange={handleChange}
+          required
+          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-[#39b8ad] focus:ring-2"
+        />
+        <input
+          type="text"
+          name="photoUrl"
+          placeholder="Photo URL"
+          value={formData.photoUrl}
+          onChange={handleChange}
+          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-[#39b8ad] focus:ring-2"
+        />
+        <select
+          name="paymentOption"
+          value={formData.paymentOption}
+          onChange={handleChange}
+          required
+          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-[#39b8ad] focus:ring-2"
+        >
+          <option value="">Select Payment Option</option>
+          <option value="Credit Card">Credit Card</option>
+          <option value="Bkash">Bkash</option>
+          <option value="Nagad">Nagad</option>
+        </select>
+
+        <button
+          type="submit"
+          disabled={submitting}
+          className={`${
+            submitting ? "bg-gray-400" : "bg-[#39b8ad] hover:bg-[#2fa097]"
+          } text-white px-6 py-3 rounded-full font-semibold transition-all`}
+        >
+          {submitting ? "Enrolling..." : "Confirm Enroll"}
+        </button>
+      </form>
     </div>
   );
 };
