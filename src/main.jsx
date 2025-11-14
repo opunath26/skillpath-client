@@ -63,7 +63,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/enrollModal/:id', // :id path এ add করতে হবে
+        path: '/enrollModal/:id', 
         element: (
           <PrivateRoute>
             <EnrollModal />

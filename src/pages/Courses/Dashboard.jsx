@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router";
 import { FaEye, FaEdit, FaTrashAlt, FaPlus } from "react-icons/fa";
 import { AuthContext } from "../../context/AuthProvider";
+import MyCourses from "./MyCourses";
 
 const Dashboard = () => {
   const [courses, setCourses] = useState([]);
@@ -43,7 +44,9 @@ const Dashboard = () => {
 
   return (
     <div className="mx-auto p-6 max-w-6xl">
-      {/* Header */}
+        {/* Add Course */}
+      <div>
+        {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="font-semibold text-2xl">Dashboard</h2>
         <button
@@ -117,6 +120,12 @@ const Dashboard = () => {
             </tbody>
           </table>
         )}
+      </div>
+      </div>
+
+      {/* My Courses */}
+      <div className="mt-20">
+        <MyCourses />
       </div>
     </div>
   );
