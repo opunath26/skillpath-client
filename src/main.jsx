@@ -17,6 +17,8 @@ import CourseDetails from './pages/Courses/CourseDetails.jsx';
 import EnrollModal from './pages/Courses/EnrollModal.jsx';
 import UpdateCourse from './pages/Courses/UpdateCourse.jsx';
 import Dashboard from './pages/Courses/Dashboard.jsx';
+import PrivateRoute from './pages/Auth/PrivateRoute.jsx';
+
 
 
 const router = createBrowserRouter([
@@ -30,23 +32,51 @@ const router = createBrowserRouter([
       },
       {
         path: '/allCourses',
-        Component: AllCourses
+        element: (
+          <PrivateRoute>
+            <AllCourses />
+          </PrivateRoute>
+        ),
       },
       {
         path: '/dashboard',
-        element: <Dashboard />,
+        element: (
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        ),
       },
       {
         path: '/addCourse',
-        element: <AddCourse></AddCourse>
+         element: (
+          <PrivateRoute>
+            <AddCourse />
+          </PrivateRoute>
+        ),
       },
       {
         path: '/myCourse',
-        element: <MyCourses></MyCourses>
+        element: (
+          <PrivateRoute>
+            <MyCourses />
+          </PrivateRoute>
+        ),
       },
+      // {
+      //   path: '/courseDetails/:id',
+      //   element: (
+      //     <PrivateRoute>
+      //       <CourseDetails />
+      //     </PrivateRoute>
+      //   ),
+      // },
       {
         path: '/courseDetails/:id',
-        element: <CourseDetails></CourseDetails>,
+        element: (
+          <PrivateRoute>
+            <CourseDetails />
+          </PrivateRoute>
+        ),
         loader: async ({ params }) => {
           const res = await fetch(`http://localhost:3000/courses/${params.id}`);
           if (!res.ok) {
