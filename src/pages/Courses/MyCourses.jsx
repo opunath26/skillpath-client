@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router";
 import { AuthContext } from "../../context/AuthProvider.jsx";
+import Swal from "sweetalert2";
 
 const MyCourses = () => {
   const { user } = useContext(AuthContext);
@@ -14,7 +15,6 @@ const MyCourses = () => {
     fetch(`http://localhost:3000/enrollments?email=${user.email}`)
       .then((res) => res.json())
       .then((enrollments) => {
-
         const courseIds = enrollments.map((e) => e.courseId);
 
         Promise.all(
@@ -27,7 +27,7 @@ const MyCourses = () => {
           // Merge course with enrollmentId
           const merged = courses.map((course, index) => ({
             ...course,
-            enrollmentId: enrollments[index]._id, 
+            enrollmentId: enrollments[index]._id,
           }));
 
           setEnrolledCourses(merged);
@@ -36,11 +36,31 @@ const MyCourses = () => {
       .catch((err) => console.error(err));
   }, [user]);
 
+  const showToast = (icon, title) => {
+    Swal.fire({
+      position: "top-center",
+      icon: icon,
+      title: title,
+      showConfirmButton: false,
+      timer: 2000,
+      toast: true,
+      background: icon === "success" ? "#39b8ad" : "#f56565",
+      color: "#fff",
+    });
+  };
+
   const handleDelete = async (enrollmentId) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to remove this course?"
-    );
-    if (!confirmDelete) return;
+    const confirmDelete = await Swal.fire({
+      title: "Are you sure?",
+      text: "You want to remove this course?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, remove it!",
+    });
+
+    if (!confirmDelete.isConfirmed) return;
 
     try {
       const res = await fetch(
@@ -52,11 +72,11 @@ const MyCourses = () => {
         setEnrolledCourses(
           enrolledCourses.filter((c) => c.enrollmentId !== enrollmentId)
         );
-        alert("Enrollment removed successfully!");
+        showToast("success", "Enrollment removed successfully!");
       }
     } catch (error) {
       console.error(error);
-      alert("Failed to remove enrollment");
+      showToast("error", "Failed to remove enrollment");
     }
   };
 

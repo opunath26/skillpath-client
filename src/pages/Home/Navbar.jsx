@@ -13,7 +13,7 @@ const Navbar = () => {
   const handleLogout = () => {
     logOut()
       .then(() => {
-        console.log("User logged out");
+        // console.log("User logged out");
         navigate("/login");
       })
       .catch((err) => console.error(err));

@@ -18,6 +18,7 @@ import EnrollModal from './pages/Courses/EnrollModal.jsx';
 import UpdateCourse from './pages/Courses/UpdateCourse.jsx';
 import Dashboard from './pages/Courses/Dashboard.jsx';
 import PrivateRoute from './pages/Auth/PrivateRoute.jsx';
+import Error from './components/Erorr.jsx';
 
 
 
@@ -110,6 +111,10 @@ const router = createBrowserRouter([
         path: '/login',
         Component: Login
       },
+      {
+        path: '*',
+        Component: Error
+      }
     ]
   },
 ]);

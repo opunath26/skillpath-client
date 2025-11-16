@@ -9,6 +9,20 @@ const Register = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  const showToast = (icon, title) => {
+    Swal.fire({
+      toast: true,
+      position: "top-end",
+      icon: icon,
+      title: title,
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true,
+      background: icon === "success" ? "#39b8ad" : "#f87171",
+      color: "#fff",
+    });
+  };
+
   const handleRegister = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -21,22 +35,11 @@ const Register = () => {
 
     createUser(email, password, name, photoURL)
       .then((user) => {
-         console.log("Registered user:", user);
-        Swal.fire({
-          position: "top-center",
-          icon: "success",
-          title: "Registration Successful!",
-          showConfirmButton: false,
-          timer: 2000,
-          toast: true,
-          background: "#39b8ad",
-          color: "#fff",
-        });
+        showToast("success", "Registration Successful!");
 
         // Backend e save korar data
         const newUser = { name, email, photoURL };
 
-        // 🔥 User save to MongoDB
         fetch("http://localhost:3000/users", {
           method: "POST",
           headers: {
@@ -57,20 +60,11 @@ const Register = () => {
       })
       .catch((err) => {
         console.error("Firebase registration error:", err);
-        Swal.fire({
-          position: "top-center",
-          icon: "error",
-          title: "Registration Failed!",
-          text: err.message,
-          showConfirmButton: false,
-          timer: 2500,
-          toast: true,
-        });
+        showToast("error", err.message);
         setError(err.message);
       });
   };
 
-  // 🔹 Google sign-in handler
   const handleGoogleSignIn = () => {
     signInWithGoogle()
       .then((result) => {
@@ -81,40 +75,29 @@ const Register = () => {
           photoURL: googleUser.photoURL,
         };
 
-        // Google user save to DB
         fetch("http://localhost:3000/users", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(newUser),
         });
 
-        Swal.fire({
-          position: "top-center",
-          icon: "success",
-          title: "Google Sign-in Successful!",
-          showConfirmButton: false,
-          timer: 2000,
-          toast: true,
-          background: "#39b8ad",
-          color: "#fff",
-        });
-
+        showToast("success", "Google Sign-in Successful!");
         navigate("/");
       })
       .catch((err) => {
         setError(err.message);
+        showToast("error", err.message);
       });
   };
 
   return (
-    <div className="flex justify-center items-center bg-gradient-to-br from-[#39b8ad] to-[#2ea99f] p-6 min-h-screen">
+    <div className="flex justify-center items-center bg-gradient-to-br p-6 min-h-screen">
       <div className="bg-white/90 shadow-2xl backdrop-blur-lg p-8 rounded-2xl w-full max-w-md">
         <h2 className="mb-6 font-bold text-[#39b8ad] text-3xl text-center">
           Create Account
         </h2>
 
         <form onSubmit={handleRegister} className="space-y-5">
-          {/* Full Name */}
           <div className="relative">
             <FaUser className="top-3 left-3 absolute text-gray-400" />
             <input
@@ -126,7 +109,6 @@ const Register = () => {
             />
           </div>
 
-          {/* Photo URL */}
           <div className="relative">
             <FaImage className="top-3 left-3 absolute text-gray-400" />
             <input
@@ -137,7 +119,6 @@ const Register = () => {
             />
           </div>
 
-          {/* Email */}
           <div className="relative">
             <FaEnvelope className="top-3 left-3 absolute text-gray-400" />
             <input
@@ -149,7 +130,6 @@ const Register = () => {
             />
           </div>
 
-          {/* Password */}
           <div className="relative">
             <FaLock className="top-3 left-3 absolute text-gray-400" />
             <input
@@ -161,10 +141,8 @@ const Register = () => {
             />
           </div>
 
-          {/* Error message */}
           {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
-          {/* Register button */}
           <button
             type="submit"
             className="bg-gradient-to-r from-[#39b8ad] hover:from-[#2ea99f] to-[#2ea99f] hover:to-[#39b8ad] shadow-md py-2 rounded-md w-full font-semibold text-white hover:scale-105 transition-all duration-500"
@@ -173,14 +151,12 @@ const Register = () => {
           </button>
         </form>
 
-        {/* Divider */}
         <div className="flex items-center my-5">
           <div className="flex-grow border-gray-300 border-t"></div>
           <span className="mx-3 text-gray-500 text-sm">OR</span>
           <div className="flex-grow border-gray-300 border-t"></div>
         </div>
 
-        {/* Google Sign In */}
         <button
           onClick={handleGoogleSignIn}
           className="flex justify-center items-center gap-2 hover:bg-[#39b8ad] py-2 border border-[#39b8ad] rounded-md w-full font-semibold text-[#39b8ad] hover:text-white transition-all duration-500"
@@ -190,10 +166,7 @@ const Register = () => {
 
         <p className="mt-5 text-gray-600 text-center">
           Already have an account?{" "}
-          <a
-            href="/login"
-            className="font-medium text-[#39b8ad] hover:underline"
-          >
+          <a href="/login" className="font-medium text-[#39b8ad] hover:underline">
             Login here
           </a>
         </p>

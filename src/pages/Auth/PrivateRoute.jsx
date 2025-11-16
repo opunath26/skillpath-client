@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Navigate, useLocation } from "react-router";
 import { AuthContext } from "../../context/AuthProvider";
+import Spinner from "../../components/Spinner";
 
 
 const PrivateRoute = ({ children }) => {
@@ -8,7 +9,7 @@ const PrivateRoute = ({ children }) => {
   const location = useLocation();
 
   if (loading) {
-    return <p className="mt-10 text-center">Loading...</p>;
+    return <Spinner />;
   }
 
   if (!user) {

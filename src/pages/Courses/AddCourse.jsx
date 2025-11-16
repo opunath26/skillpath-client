@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router";
 import { AuthContext } from "../../context/AuthProvider";
+import { toast } from "react-hot-toast";
 
 const AddCourse = () => {
   const { user } = useContext(AuthContext);
@@ -13,8 +14,9 @@ const AddCourse = () => {
       title: e.target.title.value,
       category: e.target.category.value,
       description: e.target.description.value,
-      thumbnail: e.target.thumbnail.value,
-      price: 500,
+      thumbnail: e.target.image.value,
+      price: e.target.price.value, 
+      duration: e.target.duration.value,
       instructorName: user?.email || "unknown",
     };
 
@@ -28,11 +30,18 @@ const AddCourse = () => {
       .then((res) => res.json())
       .then((data) => {
         console.log("Course Added:", data);
-        alert("✅ Course added successfully!");
-        navigate("/dashboard"); 
+        toast.success("✅ Course added successfully!", {
+          position: "top-center",
+          duration: 3000,
+        });
+        navigate("/dashboard");
       })
       .catch((err) => {
         console.error("Error:", err);
+        toast.error("❌ Failed to add course", {
+          position: "top-center",
+          duration: 3000,
+        });
       });
   };
 
@@ -102,8 +111,36 @@ const AddCourse = () => {
             </label>
             <input
               type="text"
-              name="thumbnail"
+              name="image"
               placeholder="Enter image URL"
+              className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+              required
+            />
+          </div>
+
+          {/* Price */}
+          <div>
+            <label className="block mb-1 font-medium text-gray-700">
+              Price
+            </label>
+            <input
+              type="number"
+              name="price"
+              placeholder="Enter course price"
+              className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+              required
+            />
+          </div>
+
+          {/* Duration */}
+          <div>
+            <label className="block mb-1 font-medium text-gray-700">
+              Duration
+            </label>
+            <input
+              type="text"
+              name="duration"
+              placeholder="Enter course duration (e.g., 5 weeks)"
               className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
               required
             />

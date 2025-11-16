@@ -1,7 +1,10 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import { AuthContext } from "../../context/AuthProvider";
+
+const MySwal = withReactContent(Swal);
 
 const Login = () => {
   const { signInUser } = useContext(AuthContext);
@@ -18,37 +21,47 @@ const Login = () => {
 
     signInUser(email, password)
       .then(() => {
-        Swal.fire({
-          position: "top-center",
+        MySwal.fire({
+          toast: true,
+          position: "top-end",
           icon: "success",
           title: "Login Successful!",
           showConfirmButton: false,
           timer: 2000,
-          toast: true,
-          background: "#39b8ad",
+          timerProgressBar: true,
+          background: "#38b2ac",
           color: "#fff",
+          customClass: {
+            popup: "shadow-xl rounded-xl",
+          },
         });
         form.reset();
         navigate("/");
       })
       .catch((err) => {
         setError(err.message);
-        Swal.fire({
-          position: "top-center",
+        MySwal.fire({
+          toast: true,
+          position: "top-end",
           icon: "error",
           title: "Login Failed!",
           text: err.message,
           showConfirmButton: false,
           timer: 2500,
-          toast: true,
+          timerProgressBar: true,
+          background: "#e53e3e",
+          color: "#fff",
+          customClass: {
+            popup: "shadow-xl rounded-xl",
+          },
         });
       });
   };
 
   return (
-    <div className="flex justify-center items-center bg-gradient-to-br from-[#39b8ad] to-[#2ea99f] p-6 min-h-screen">
+    <div className="flex justify-center items-center bg-gradient-to-br from-gray-100 via-gray-200 to-gray-100 p-6 min-h-screen">
       <div className="bg-white/90 shadow-2xl backdrop-blur-lg p-8 rounded-2xl w-full max-w-md">
-        <h2 className="mb-6 font-bold text-[#39b8ad] text-3xl text-center">
+        <h2 className="mb-6 font-bold text-[#38b2ac] text-3xl text-center">
           Login to Your Account
         </h2>
 
@@ -63,7 +76,7 @@ const Login = () => {
               name="email"
               placeholder="Enter your email"
               required
-              className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-[#39b8ad] focus:ring-2 w-full"
+              className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-[#38b2ac] focus:ring-2 w-full"
             />
           </div>
 
@@ -77,13 +90,13 @@ const Login = () => {
               name="password"
               placeholder="Enter your password"
               required
-              className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-[#39b8ad] focus:ring-2 w-full"
+              className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-[#38b2ac] focus:ring-2 w-full"
             />
           </div>
 
           {/* Forget Password */}
           <div className="text-right">
-            <p className="text-[#39b8ad] text-sm hover:underline cursor-pointer">
+            <p className="text-[#38b2ac] text-sm hover:underline cursor-pointer">
               Forget Password?
             </p>
           </div>
@@ -94,7 +107,7 @@ const Login = () => {
           {/* Login Button */}
           <button
             type="submit"
-            className="bg-[#39b8ad] hover:bg-[#2ea99f] py-2 rounded-lg w-full text-white transition-all duration-300"
+            className="bg-[#38b2ac] hover:bg-[#2c7a7b] py-2 rounded-lg w-full text-white transition-all duration-300"
           >
             Login
           </button>
@@ -103,7 +116,7 @@ const Login = () => {
         {/* Register Link */}
         <p className="mt-5 text-gray-600 text-sm text-center">
           Don’t have an account?{" "}
-          <Link to="/register" className="text-[#39b8ad] hover:underline">
+          <Link to="/register" className="text-[#38b2ac] hover:underline">
             Register
           </Link>
         </p>

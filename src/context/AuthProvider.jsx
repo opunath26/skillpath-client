@@ -16,48 +16,56 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  //  Create new user and update profile
- const createUser = (email, password, name, photoURL) => {
-  setLoading(true);
-  return createUserWithEmailAndPassword(auth, email, password)
-    .then(async (result) => {
+  // Create new user
+  const createUser = (email, password, name, photoURL) => {
+    setLoading(true);
+    return createUserWithEmailAndPassword(auth, email, password)
+      .then(async (result) => {
         const user = result.user;
-      if (name || photoURL) {
-        await    updateProfile(user, {
-          displayName: name,
-          photoURL: photoURL,
-        }).then(() => result.user);
-      }
-      return user;
-    })
-    .catch(error => {
-      console.error(error);
-      setLoading(false);
-      throw error;
-    });
-};
 
+        if (name || photoURL) {
+          await updateProfile(user, {
+            displayName: name,
+            photoURL: photoURL,
+          });
+        }
 
-  //  Sign in user (email + password)
+        return user;
+      })
+      .catch((error) => {
+        setLoading(false);
+        throw error;
+      });
+  };
+
+  // Sign-in
   const signInUser = (email, password) => {
     setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
 
-  // Google Sign-in
+  // Google Login
   const googleProvider = new GoogleAuthProvider();
   const signInWithGoogle = () => {
     setLoading(true);
     return signInWithPopup(auth, googleProvider);
   };
 
-  //  Sign Out
+  // Logout
   const logOut = () => {
     setLoading(true);
     return signOut(auth);
   };
 
-  //  Observe Auth State
+  // 🔥 Get Firebase ID Token
+  const getToken = async () => {
+    if (auth.currentUser) {
+      return await auth.currentUser.getIdToken();
+    }
+    return null;
+  };
+
+  // Auth State observer
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -73,11 +81,12 @@ const AuthProvider = ({ children }) => {
     signInUser,
     signInWithGoogle,
     logOut,
+    getToken, 
   };
 
   return (
     <AuthContext.Provider value={authInfo}>
-        {children}
+      {children}
     </AuthContext.Provider>
   );
 };

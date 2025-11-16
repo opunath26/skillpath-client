@@ -7,6 +7,7 @@ const UpdateCourse = () => {
   const loadedCourse = useLoaderData();
   const courseData = loadedCourse.result;
   const [course, setCourse] = useState(courseData);
+  const [thumbnailPreview, setThumbnailPreview] = useState(course.image || "");
   const navigate = useNavigate();
 
   // Handle input change
@@ -28,6 +29,7 @@ const UpdateCourse = () => {
           duration: course.duration,
           price: course.price,
           description: course.description,
+          image: course.image, // Updated image
         }),
       });
 
@@ -52,7 +54,7 @@ const UpdateCourse = () => {
       {/* Image Section */}
       <div className="shadow-lg rounded-2xl overflow-hidden">
         <img
-          src={course.image}
+          src={thumbnailPreview}
           alt={course.title}
           className="w-full h-80 object-cover hover:scale-105 transition-all duration-300"
         />
@@ -102,6 +104,30 @@ const UpdateCourse = () => {
             className="p-2 border rounded-lg w-full h-28"
           ></textarea>
         </div>
+
+        {/* Thumbnail / Image Change */}
+<div>
+  <label className="block mb-1 font-semibold text-gray-700">Course Image URL</label>
+  <input
+    type="text"
+    name="image"
+    value={course.image}
+    onChange={(e) => {
+      handleChange(e);
+      setThumbnailPreview(e.target.value);
+    }}
+    placeholder="Enter image URL"
+    className="p-2 border rounded-lg w-full"
+  />
+  {thumbnailPreview ? (
+    <img
+      src={thumbnailPreview}
+      alt="Thumbnail Preview"
+      className="mt-2 border rounded-lg w-full h-40 object-cover"
+    />
+  ) : null}
+</div>
+
       </div>
 
       {/* Course Info */}
@@ -121,12 +147,12 @@ const UpdateCourse = () => {
       <div className="flex items-center gap-4 bg-gray-100 mt-8 p-4 rounded-xl">
         <img
           src={course.instructorPhoto}
-          alt={course.instructorName}
+          alt={course.instructorPhoto}
           className="border-[#39b8ad] border-2 rounded-full w-16 h-16 object-cover"
         />
         <div>
           <h4 className="font-semibold text-gray-800 text-lg">{course.instructorName}</h4>
-          <p className="text-gray-600 text-sm">{course.instructorEmail}</p>
+          <p className="text-gray-600 text-sm">{course.instructorPhoto}</p>
         </div>
       </div>
 

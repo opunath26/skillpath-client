@@ -2,25 +2,24 @@ import React, { useContext } from "react";
 import { useLoaderData, useNavigate } from "react-router";
 import { FaUsers, FaClock, FaStar } from "react-icons/fa";
 import { AuthContext } from "../../context/AuthProvider.jsx";
+import Spinner from "../../components/Spinner.jsx";
 
 const CourseDetails = () => {
   const { result: course } = useLoaderData();
   const { user } = useContext(AuthContext);
-  const navigate = useNavigate(); // useNavigate hook
+  const navigate = useNavigate(); 
 
   if (!course) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <p className="font-semibold text-gray-600 text-xl animate-pulse">
-          Loading course details...
-        </p>
+        <Spinner />
       </div>
     );
   }
 
   const handleEnroll = () => {
-  navigate(`/enrollModal/${course._id}`); 
-};
+    navigate(`/enrollModal/${course._id}`);
+  };
 
   return (
     <div className="mx-auto mt-10 p-6 max-w-5xl">

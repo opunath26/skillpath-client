@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthProvider.jsx";
 import { useLoaderData, useNavigate } from "react-router";
+import Swal from "sweetalert2";
 
 const EnrollModal = () => {
   const course = useLoaderData();
@@ -22,11 +23,24 @@ const EnrollModal = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const showToast = (icon, title) => {
+    Swal.fire({
+      position: "top-center",
+      icon: icon,
+      title: title,
+      showConfirmButton: false,
+      timer: 2000,
+      toast: true,
+      background: icon === "success" ? "#39b8ad" : "#f56565",
+      color: "#fff",
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!user) {
-      alert("Please login first!");
+      showToast("error", "Please login first!");
       navigate("/login");
       return;
     }
@@ -57,14 +71,14 @@ const EnrollModal = () => {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        alert("✅ Successfully enrolled!");
-        navigate("/myCourse"); 
+        showToast("success", "Successfully enrolled!");
+        navigate("/myCourse");
       } else {
-        alert(data.message || "⚠️ Enrollment failed!");
+        showToast("error", data.message || "Enrollment failed!");
       }
     } catch (error) {
       console.error(error);
-      alert("⚠️ Enrollment failed! Try again.");
+      showToast("error", "Enrollment failed! Try again.");
     } finally {
       setSubmitting(false);
     }
