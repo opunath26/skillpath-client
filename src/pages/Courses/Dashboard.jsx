@@ -12,7 +12,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (!user?.email) return;
 
-    fetch("http://localhost:3000/courses")
+    fetch("https://skill-path-server-five.vercel.app/courses")
       .then((res) => res.json())
       .then((data) => {
         const myCourses = data.filter(
@@ -29,7 +29,7 @@ const Dashboard = () => {
     if (!confirmDelete) return;
 
     try {
-      const res = await fetch(`http://localhost:3000/courses/${id}`, {
+      const res = await fetch(`https://skill-path-server-five.vercel.app/courses/${id}`, {
         method: "DELETE",
       });
       if (res.ok) {

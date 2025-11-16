@@ -64,14 +64,14 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/enrollModal/:id', 
+        path: '/enrollModal/:id',
         element: (
           <PrivateRoute>
             <EnrollModal />
           </PrivateRoute>
         ),
         loader: async ({ params }) => {
-          const res = await fetch(`http://localhost:3000/courses/${params.id}`);
+          const res = await fetch(`https://skill-path-server-five.vercel.app/courses/${params.id}`);
           if (!res.ok) {
             throw new Response("Course not found", { status: res.status });
           }
@@ -87,7 +87,7 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
         loader: async ({ params }) => {
-          const res = await fetch(`http://localhost:3000/courses/${params.id}`);
+          const res = await fetch(`https://skill-path-server-five.vercel.app/courses/${params.id}`);
           if (!res.ok) {
             throw new Response("Course not found", { status: res.status });
           }
@@ -100,7 +100,7 @@ const router = createBrowserRouter([
           <UpdateCourse />
         ),
         loader: ({ params }) => {
-          return fetch(`http://localhost:3000/courses/${params.id}`);
+          return fetch(`https://skill-path-server-five.vercel.app/courses/${params.id}`);
         },
       },
       {

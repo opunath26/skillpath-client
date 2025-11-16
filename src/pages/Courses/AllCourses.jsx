@@ -22,7 +22,7 @@ const AllCourses = () => {
         setLoading(true);
         const token = await getToken();
 
-        const res = await axios.get("http://localhost:3000/courses", {
+        const res = await axios.get("https://skill-path-server-five.vercel.app/courses", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -33,7 +33,7 @@ const AllCourses = () => {
 
         const uniqueCategories = ["All", ...new Set(res.data.map(c => c.category))];
         setCategories(uniqueCategories);
-        setLoading(false); 
+        setLoading(false);
       } catch (err) {
         console.error("Failed to load courses:", err);
         setLoading(false);
@@ -78,8 +78,8 @@ const AllCourses = () => {
               key={index}
               onClick={() => setSelectedCategory(cat)}
               className={`px-4 py-2 rounded-full border transition-all duration-300 ${selectedCategory === cat
-                  ? "bg-teal-500 text-white border-teal-500"
-                  : "bg-white text-gray-700 border-gray-300 hover:bg-teal-100"
+                ? "bg-teal-500 text-white border-teal-500"
+                : "bg-white text-gray-700 border-gray-300 hover:bg-teal-100"
                 }`}
             >
               {cat}

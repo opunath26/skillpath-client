@@ -15,12 +15,12 @@ const AddCourse = () => {
       category: e.target.category.value,
       description: e.target.description.value,
       thumbnail: e.target.image.value,
-      price: e.target.price.value, 
+      price: e.target.price.value,
       duration: e.target.duration.value,
       instructorName: user?.email || "unknown",
     };
 
-    fetch("http://localhost:3000/courses", {
+    fetch("https://skill-path-server-five.vercel.app/courses", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -19,7 +19,7 @@ const UpdateCourse = () => {
   // Handle update (PATCH request)
   const handleSave = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/courses/${course._id}`, {
+      const response = await fetch(`https://skill-path-server-five.vercel.app/courses/${course._id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -106,27 +106,27 @@ const UpdateCourse = () => {
         </div>
 
         {/* Thumbnail / Image Change */}
-<div>
-  <label className="block mb-1 font-semibold text-gray-700">Course Image URL</label>
-  <input
-    type="text"
-    name="image"
-    value={course.image}
-    onChange={(e) => {
-      handleChange(e);
-      setThumbnailPreview(e.target.value);
-    }}
-    placeholder="Enter image URL"
-    className="p-2 border rounded-lg w-full"
-  />
-  {thumbnailPreview ? (
-    <img
-      src={thumbnailPreview}
-      alt="Thumbnail Preview"
-      className="mt-2 border rounded-lg w-full h-40 object-cover"
-    />
-  ) : null}
-</div>
+        <div>
+          <label className="block mb-1 font-semibold text-gray-700">Course Image URL</label>
+          <input
+            type="text"
+            name="image"
+            value={course.image}
+            onChange={(e) => {
+              handleChange(e);
+              setThumbnailPreview(e.target.value);
+            }}
+            placeholder="Enter image URL"
+            className="p-2 border rounded-lg w-full"
+          />
+          {thumbnailPreview ? (
+            <img
+              src={thumbnailPreview}
+              alt="Thumbnail Preview"
+              className="mt-2 border rounded-lg w-full h-40 object-cover"
+            />
+          ) : null}
+        </div>
 
       </div>
 

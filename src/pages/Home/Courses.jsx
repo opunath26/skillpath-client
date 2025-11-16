@@ -7,7 +7,7 @@ const Courses = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get("http://localhost:3000/courses")
+    axios.get("https://skill-path-server-five.vercel.app/courses")
       .then(res => {
         setCourses(res.data.slice(0, 6));
       })

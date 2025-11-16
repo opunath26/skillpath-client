@@ -40,7 +40,7 @@ const Register = () => {
         // Backend e save korar data
         const newUser = { name, email, photoURL };
 
-        fetch("http://localhost:3000/users", {
+        fetch("https://skill-path-server-five.vercel.app/users", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -75,7 +75,7 @@ const Register = () => {
           photoURL: googleUser.photoURL,
         };
 
-        fetch("http://localhost:3000/users", {
+        fetch("https://skill-path-server-five.vercel.app/users", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(newUser),

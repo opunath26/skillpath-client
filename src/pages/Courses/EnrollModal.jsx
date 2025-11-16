@@ -60,7 +60,7 @@ const EnrollModal = () => {
 
     try {
       setSubmitting(true);
-      const res = await fetch("http://localhost:3000/enrollments", {
+      const res = await fetch("https://skill-path-server-five.vercel.app/enrollments", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -159,9 +159,8 @@ const EnrollModal = () => {
         <button
           type="submit"
           disabled={submitting}
-          className={`${
-            submitting ? "bg-gray-400" : "bg-[#39b8ad] hover:bg-[#2fa097]"
-          } text-white px-6 py-3 rounded-full font-semibold transition-all`}
+          className={`${submitting ? "bg-gray-400" : "bg-[#39b8ad] hover:bg-[#2fa097]"
+            } text-white px-6 py-3 rounded-full font-semibold transition-all`}
         >
           {submitting ? "Enrolling..." : "Confirm Enroll"}
         </button>

@@ -12,14 +12,14 @@ const MyCourses = () => {
     if (!user) return;
 
     // Fetch enrollments
-    fetch(`http://localhost:3000/enrollments?email=${user.email}`)
+    fetch(`https://skill-path-server-five.vercel.app/enrollments?email=${user.email}`)
       .then((res) => res.json())
       .then((enrollments) => {
         const courseIds = enrollments.map((e) => e.courseId);
 
         Promise.all(
           courseIds.map((id) =>
-            fetch(`http://localhost:3000/courses/${id}`)
+            fetch(`https://skill-path-server-five.vercel.app/courses/${id}`)
               .then((res) => res.json())
               .then((data) => data.result || data)
           )
@@ -64,7 +64,7 @@ const MyCourses = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:3000/enrollments/${enrollmentId}`,
+        `https://skill-path-server-five.vercel.app/enrollments/${enrollmentId}`,
         { method: "DELETE" }
       );
 
