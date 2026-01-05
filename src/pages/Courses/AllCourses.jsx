@@ -128,7 +128,7 @@ const AllCourses = () => {
                     <FaClock className="text-slate-400" /> {course.duration}
                   </div>
                   <div className="flex items-center gap-1.5 font-semibold text-slate-900">
-                    <FaTag className="text-slate-400" /> ${course.price}
+                    <FaTag className="text-slate-400" /> <span className="font-bold text-lg">৳</span>{course.price}
                   </div>
                 </div>
 
