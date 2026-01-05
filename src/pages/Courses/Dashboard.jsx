@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, Outlet, useLocation } from "react-router";
 import { FaEye, FaEdit, FaTrashAlt, FaPlus } from "react-icons/fa";
 import { AuthContext } from "../../context/AuthProvider";
 import MyCourses from "./MyCourses";
@@ -8,6 +8,7 @@ const Dashboard = () => {
   const [courses, setCourses] = useState([]);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (!user?.email) return;
@@ -44,90 +45,104 @@ const Dashboard = () => {
 
   return (
     <div className="mx-auto p-6 max-w-6xl">
-      {/* Add Course */}
-      <div>
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="font-semibold text-2xl">Dashboard</h2>
-          <button
-            onClick={() => navigate("/addCourse")}
-            className="flex items-center gap-2 bg-gradient-to-r from-[#39b8ad] hover:from-[#2ea99f] to-[#2ea99f] hover:to-[#39b8ad] shadow-md hover:shadow-lg px-4 py-2 rounded-md text-white transition"
-          >
-            <FaPlus /> Add New Course
-          </button>
-
-        </div>
-
-        {/* My Courses */}
-        <div className="bg-white shadow-md p-4 rounded-lg">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="font-semibold text-xl">My Courses</h3>
-            <p className="text-gray-600">Total Courses: {courses.length}</p>
+      
+      {location.pathname === "/dashboard" ? (
+        <div>
+          {/* Header */}
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="font-semibold text-slate-800 text-2xl">Instructor Dashboard</h2>
+            <button
+              onClick={() => navigate("/addCourse")}
+              className="flex items-center gap-2 bg-[#0D9488] hover:bg-[#0b7a6f] shadow-md hover:shadow-lg px-5 py-2.5 rounded-xl font-bold text-white transition-all duration-300"
+            >
+              <FaPlus /> Add New Course
+            </button>
           </div>
 
-          {courses.length === 0 ? (
-            <p className="py-4 text-gray-500 text-center">
-              No courses added yet.
-            </p>
-          ) : (
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="bg-gray-100 border-b text-left">
-                  <th className="p-3">#</th>
-                  <th className="p-3">Image</th>
-                  <th className="p-3">Title</th>
-                  <th className="p-3 text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {courses.map((course, index) => (
-                  <tr
-                    key={course._id}
-                    className="hover:bg-gray-50 border-b transition"
-                  >
-                    <td className="p-3">{index + 1}</td>
-                    <td className="p-3">
-                      <img
-                        src={course.thumbnail || course.image}
-                        alt={course.title}
-                        className="rounded-md w-16 h-16 object-cover"
-                      />
-                    </td>
-                    <td className="p-3 font-medium">{course.title}</td>
-                    <td className="flex justify-center items-center gap-4 p-3">
-                      <button
-                        onClick={() => navigate(`/courseDetails/${course._id}`)} // View
-                        className="flex items-center gap-1 text-blue-600 hover:text-blue-800"
-                      >
-                        <FaEye /> View
-                      </button>
+          {/* My Courses Table Card */}
+          <div className="bg-white shadow-sm p-6 border border-slate-100 rounded-2xl">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="font-bold text-slate-700 text-xl">My Courses</h3>
+              <span className="bg-[#0D9488]/10 px-4 py-1 rounded-full font-bold text-[#0D9488] text-sm">
+                Total: {courses.length}
+              </span>
+            </div>
 
-                      <button
-                        onClick={() => navigate(`/updateCourse/${course._id}`)} // Update
-                        className="flex items-center gap-1 text-green-600 hover:text-green-800"
+            {courses.length === 0 ? (
+              <div className="py-12 text-center">
+                <p className="text-gray-400 italic">No courses added yet.</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="bg-slate-50 border-slate-100 border-b text-left">
+                      <th className="p-4 font-bold text-slate-600 text-xs uppercase tracking-wider">#</th>
+                      <th className="p-4 font-bold text-slate-600 text-xs uppercase tracking-wider">Thumbnail</th>
+                      <th className="p-4 font-bold text-slate-600 text-xs uppercase tracking-wider">Course Title</th>
+                      <th className="p-4 font-bold text-slate-600 text-xs text-center uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {courses.map((course, index) => (
+                      <tr
+                        key={course._id}
+                        className="hover:bg-slate-50/50 border-slate-50 border-b transition-colors duration-200"
                       >
-                        <FaEdit /> Update
-                      </button>
+                        <td className="p-4 font-medium text-slate-500">{index + 1}</td>
+                        <td className="p-4">
+                          <img
+                            src={course.thumbnail || course.image}
+                            alt={course.title}
+                            className="shadow-sm border border-slate-100 rounded-xl w-14 h-14 object-cover"
+                          />
+                        </td>
+                        <td className="p-4 font-bold text-slate-700">{course.title}</td>
+                        <td className="p-4">
+                          <div className="flex justify-center items-center gap-3">
+                            <button
+                              onClick={() => navigate(`/courseDetails/${course._id}`)}
+                              className="hover:bg-blue-50 p-2 rounded-lg text-blue-500 transition-colors"
+                              title="View Course"
+                            >
+                              <FaEye size={18} />
+                            </button>
 
-                      <button
-                        onClick={() => handleDelete(course._id)} // Delete
-                        className="flex items-center gap-1 text-red-600 hover:text-red-800"
-                      >
-                        <FaTrashAlt /> Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
+                            <button
+                              onClick={() => navigate(`/updateCourse/${course._id}`)}
+                              className="hover:bg-emerald-50 p-2 rounded-lg text-emerald-500 transition-colors"
+                              title="Edit Course"
+                            >
+                              <FaEdit size={18} />
+                            </button>
+
+                            <button
+                              onClick={() => handleDelete(course._id)}
+                              className="hover:bg-red-50 p-2 rounded-lg text-red-500 transition-colors"
+                              title="Delete Course"
+                            >
+                              <FaTrashAlt size={18} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
+          {/* Enrolled Courses Section */}
+          <div className="mt-16">
+            <MyCourses />
+          </div>
         </div>
-      </div>
-
-      {/* My Courses */}
-      <div className="mt-20">
-        <MyCourses />
-      </div>
+      ) : (
+        <div className="animate-in duration-500 fade-in">
+           <Outlet />
+        </div>
+      )}
     </div>
   );
 };

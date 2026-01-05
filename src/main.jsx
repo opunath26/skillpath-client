@@ -20,6 +20,7 @@ import Dashboard from './pages/Courses/Dashboard.jsx';
 import PrivateRoute from './pages/Auth/PrivateRoute.jsx';
 import Error from './components/Erorr.jsx';
 import About from './pages/Home/About.jsx';
+import Profile from './Dashboard/Profile.jsx';
 
 
 
@@ -49,6 +50,12 @@ const router = createBrowserRouter([
             <Dashboard />
           </PrivateRoute>
         ),
+        children: [
+          {
+            path: 'profile',
+            element: <Profile />
+          }
+        ]
       },
       {
         path: '/addCourse',
