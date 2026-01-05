@@ -21,9 +21,12 @@ const Courses = () => {
         <h2 className="font-bold text-3xl">Browse Our Best Courses</h2>
         <button
           onClick={() => navigate("/allCourses")}
-          className="bg-teal-500 hover:bg-teal-600 px-4 py-2 rounded text-white transition-colors"
+          className="group shadow-md hover:shadow-lg px-8 border-none font-bold text-white active:scale-95 transition-all hover:translate-x-1 duration-300 btn btn-primary transform"
         >
           View All Courses
+          <span className="ml-2 transition-transform group-hover:translate-x-1 duration-200">
+            →
+          </span>
         </button>
       </div>
 
@@ -40,8 +43,7 @@ const Courses = () => {
               <h3 className="mb-2 font-semibold text-xl">{course.title}</h3>
               <p className="mb-2 font-bold text-gray-800">Price: ${course.price}</p>
               <button
-                className="py-2 rounded-full w-full font-semibold text-white"
-                style={{ backgroundColor: "#39b8ad" }}
+                className="shadow-md hover:shadow-lg mt-4 border-none rounded-xl w-full font-bold text-white active:scale-95 transition-all duration-300 btn btn-primary transform"
               >
                 View Details
               </button>

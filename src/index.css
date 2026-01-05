@@ -1,13 +1,19 @@
 @import "tailwindcss";
 @plugin "daisyui" {
   themes: light --default;
- }
+}
 
 @plugin "daisyui/theme" {
   name: "light";
   default: true;
-  --color-primary: #39b8ad;
-  --color-secondary: teal;
+  
+  --color-primary: #0D9488; 
+  --color-primary-content: #ffffff;
+  --color-secondary: #0F766E;
+  --color-accent: #2DD4BF;
+  
+
+  --rounded-btn: 0.75rem; 
 }
 
 /* slick-carousel styles */

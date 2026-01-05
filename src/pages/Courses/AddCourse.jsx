@@ -149,7 +149,7 @@ const AddCourse = () => {
           {/* Submit */}
           <button
             type="submit"
-            className="bg-indigo-600 hover:bg-indigo-700 py-2 rounded-lg w-full font-semibold text-white transition duration-300"
+            className="shadow-md hover:shadow-lg border-none w-full font-bold text-white active:scale-95 transition-all duration-300 btn btn-primary transform"
           >
             Add Course
           </button>

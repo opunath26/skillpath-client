@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import axios from "axios";
-import { FaUserGraduate, FaClock, FaSearch } from "react-icons/fa";
-import { AuthContext } from "../../context/AuthProvider";
+import { FaUserGraduate, FaClock, FaSearch, FaTag, FaStar } from "react-icons/fa";
 import Spinner from "../../components/Spinner";
 
 const AllCourses = () => {
@@ -13,21 +12,12 @@ const AllCourses = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const { getToken } = useContext(AuthContext);
 
-  // Load courses with token
   useEffect(() => {
     const loadCourses = async () => {
       try {
         setLoading(true);
-        const token = await getToken();
-
-        const res = await axios.get("https://skill-path-server-five.vercel.app/courses", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
+        const res = await axios.get("https://skill-path-server-five.vercel.app/courses");
         setCourses(res.data);
         setFilteredCourses(res.data);
 
@@ -39,11 +29,9 @@ const AllCourses = () => {
         setLoading(false);
       }
     };
-
     loadCourses();
-  }, [getToken]);
+  }, []);
 
-  // Filter & search logic
   useEffect(() => {
     let updatedCourses = [...courses];
     if (selectedCategory !== "All") {
@@ -57,29 +45,28 @@ const AllCourses = () => {
     setFilteredCourses(updatedCourses);
   }, [selectedCategory, searchQuery, courses]);
 
-  // Show spinner while loading
-  if (loading) {
-    return <Spinner />;
-  }
+  if (loading) return <Spinner />;
 
   return (
-    <div className="bg-gray-50 mx-auto px-4 py-10 container">
-      {/* Header */}
-      <h1 className="mb-8 font-bold text-3xl text-center">
-        Explore All Courses
-      </h1>
+    <div className="bg-white mx-auto px-4 py-12 min-h-screen container">
+      {/* Header Section */}
+      <div className="mb-12 text-center">
+        <h1 className="mb-2 font-extrabold text-slate-900 text-4xl tracking-tight">
+          Discover Your Next Skill
+        </h1>
+        <p className="text-slate-500 text-lg">High-quality courses designed for professional growth.</p>
+      </div>
 
-      {/* Filter + Search Section */}
-      <div className="flex md:flex-row flex-col justify-between items-center gap-4 mb-8">
-        {/* Categories */}
-        <div className="flex flex-wrap gap-3">
+      {/* Filter & Search Bar - Minimal Design */}
+      <div className="flex md:flex-row flex-col justify-between items-center gap-6 mb-12">
+        <div className="flex flex-wrap justify-center gap-2">
           {categories.map((cat, index) => (
             <button
               key={index}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-2 rounded-full border transition-all duration-300 ${selectedCategory === cat
-                ? "bg-teal-500 text-white border-teal-500"
-                : "bg-white text-gray-700 border-gray-300 hover:bg-teal-100"
+              className={`px-5 py-2 rounded-md text-sm font-medium transition-all duration-200 border ${selectedCategory === cat
+                  ? "bg-slate-900 text-white border-slate-900 shadow-sm"
+                  : "bg-white text-slate-600 border-slate-200 hover:border-slate-400"
                 }`}
             >
               {cat}
@@ -87,54 +74,83 @@ const AllCourses = () => {
           ))}
         </div>
 
-        {/* Search Bar */}
-        <div className="relative w-full md:w-1/3">
+        <div className="relative w-full md:w-80">
           <input
             type="text"
-            placeholder="Search courses..."
+            placeholder="Search by title..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="py-2 pr-4 pl-10 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-400 w-full"
+            className="bg-slate-50 focus:bg-white py-2.5 pr-4 pl-10 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-slate-400 w-full transition-all"
           />
-          <FaSearch className="top-3 left-3 absolute text-gray-400" />
+          <FaSearch className="top-3.5 left-3 absolute text-slate-400" />
         </div>
       </div>
 
       {/* Courses Grid */}
       {filteredCourses.length > 0 ? (
-        <div className="gap-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
+        <div className="gap-5 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4">
           {filteredCourses.map(course => (
             <div
               key={course._id}
               onClick={() => navigate(`/courseDetails/${course._id}`)}
-              className="bg-white shadow-lg hover:shadow-2xl rounded-xl overflow-hidden transition-transform hover:-translate-y-1 duration-300 cursor-pointer"
+              className="group flex flex-col bg-white shadow-sm hover:shadow-xl border border-slate-100 rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer"
             >
-              <img src={course.image} alt={course.title} className="w-full h-48 object-cover" />
-              <div className="p-5">
-                <h2 className="mb-3 font-semibold text-xl">{course.title}</h2>
-                <p className="flex items-center mb-2 text-gray-600">
-                  <FaClock className="mr-2 text-teal-500" /> Duration: {course.duration}
-                </p>
-                <p className="flex items-center mb-4 text-gray-600">
-                  <FaUserGraduate className="mr-2 text-teal-500" /> Students: {course.students?.length || 0}
-                </p>
-                <p className="mb-4 font-bold text-gray-800">Price: ${course.price}</p>
-                <button
-                  className="py-2 rounded-full w-full font-semibold text-white"
-                  style={{ backgroundColor: "#39b8ad" }}
-                >
-                  Enroll Now
-                </button>
+              {/* Image with subtle zoom effect */}
+              <div className="relative aspect-video overflow-hidden">
+                <img
+                  src={course.image}
+                  alt={course.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="top-4 left-4 absolute bg-white/90 shadow-sm backdrop-blur-sm px-3 py-1 border border-slate-200 rounded-full font-bold text-slate-800 text-xs">
+                  {course.category}
+                </div>
+              </div>
+
+              <div className="flex flex-col flex-grow p-6">
+                {/* Rating & Stats */}
+                <div className="flex justify-between items-center mb-3">
+                  <div className="flex items-center gap-1 text-amber-500 text-sm">
+                    <FaStar /> <span className="font-semibold text-slate-700">{course.rating || "4.5"}</span>
+                  </div>
+                  <div className="flex items-center gap-1 text-slate-400 text-xs">
+                    <FaUserGraduate /> {course.students?.length || 0} students
+                  </div>
+                </div>
+
+                <h2 className="mb-3 font-bold text-slate-800 group-hover:text-slate-900 text-xl line-clamp-2">
+                  {course.title}
+                </h2>
+
+                {/* Course Metadata */}
+                <div className="flex items-center gap-4 mb-6 text-slate-500 text-sm">
+                  <div className="flex items-center gap-1.5">
+                    <FaClock className="text-slate-400" /> {course.duration}
+                  </div>
+                  <div className="flex items-center gap-1.5 font-semibold text-slate-900">
+                    <FaTag className="text-slate-400" /> ${course.price}
+                  </div>
+                </div>
+
+                {/* Action Button - Minimalist */}
+                <div className="mt-auto">
+                  <button
+                    className="shadow-md border-none w-full font-bold text-white active:scale-95 transition-transform btn btn-primary"
+                  >
+                    View Details
+                  </button>
+                </div>
               </div>
             </div>
-          ))}
-        </div>
-      ) : (
-        <p className="mt-10 text-gray-500 text-lg text-center">
-          No courses found for your search or category.
-        </p>
-      )}
+      ))}
     </div>
+  ) : (
+    <div className="py-20 text-center">
+      <p className="text-slate-400 text-lg italic">No courses found matching your criteria.</p>
+    </div>
+  )
+}
+    </div >
   );
 };
 

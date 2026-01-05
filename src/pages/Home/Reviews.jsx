@@ -1,6 +1,6 @@
 import React from "react";
 import Slider from "react-slick";
-import { FaStar } from "react-icons/fa";
+import { FaStar, FaQuoteLeft } from "react-icons/fa";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -46,57 +46,84 @@ const Reviews = () => {
     const settings = {
         dots: true,
         infinite: true,
-        speed: 1000,
+        speed: 800,
         slidesToShow: 3,
         slidesToScroll: 1,
         autoplay: true,
-        autoplaySpeed: 2500,
-        cssEase: "linear",
+        autoplaySpeed: 3000,
         responsive: [
             { breakpoint: 1024, settings: { slidesToShow: 2 } },
-            { breakpoint: 640, settings: { slidesToShow: 1 } },
+            { breakpoint: 768, settings: { slidesToShow: 1 } },
         ],
     };
 
     return (
-        <section className="relative bg-gradient-to-r from-[#39b8ad]/20 via-[#2ea99f]/20 to-[#39b8ad]/20 mt-20 py-20 overflow-hidden">
-            {/* Soft parallax shapes */}
-            <div className="top-0 left-0 absolute bg-[#39b8ad]/10 blur-3xl rounded-full w-72 h-72 animate-blob mix-blend-multiply filter"></div>
-            <div className="right-0 bottom-0 absolute bg-[#2ea99f]/10 blur-3xl rounded-full w-96 h-96 animate-blob animation-delay-2000 mix-blend-multiply filter"></div>
+        <section className="bg-white py-20 overflow-hidden">
+            <div className="mx-auto px-4 md:px-10 max-w-7xl">
+                {/* Section Header */}
+                <div className="mb-16 text-center">
+                    <h2 className="mb-4 font-bold text-slate-900 text-4xl tracking-tight">
+                        Success Stories from Our Students
+                    </h2>
+                    <div className="bg-primary mx-auto rounded-full w-20 h-1"></div>
+                </div>
 
-            <div className="z-10 relative mx-auto px-4 md:px-10 max-w-7xl text-center">
-                <h2 className="mb-6 font-bold text-[#39b8ad] text-4xl">What Our Students Say</h2>
-                <p className="mb-12 text-gray-700">
-                    Hear from our learners who have transformed their careers with Skill Path.
-                </p>
-
-                <Slider {...settings}>
+                <Slider {...settings} className="review-slider">
                     {reviews.map((review, index) => (
-                        <div key={index} className="px-4">
-                            <div className="bg-white shadow-xl hover:shadow-2xl p-6 rounded-2xl transition duration-300">
-                                <div className="flex flex-col items-center">
-                                    <img
-                                        src={review.image}
-                                        alt={review.name}
-                                        className="mb-4 border-[#39b8ad] border-2 rounded-full w-20 h-20 object-cover"
-                                    />
-                                    <h3 className="font-semibold text-xl">{review.name}</h3>
-                                    <p className="mb-2 text-gray-500 text-sm">{review.role}</p>
-                                    <div className="flex justify-center items-center mb-4">
+                        <div key={index} className="px-4 py-6">
+                            <div className="group relative bg-white shadow-sm hover:shadow-md p-8 border border-slate-100 rounded-2xl h-full transition-all duration-300">
+                                {/* Quote Icon */}
+                                <FaQuoteLeft className="top-6 right-8 absolute text-slate-100 group-hover:text-primary/10 text-5xl transition-colors" />
+                                
+                                <div className="z-10 relative flex flex-col h-full">
+                                    {/* Ratings */}
+                                    <div className="flex gap-1 mb-4">
                                         {Array.from({ length: 5 }, (_, i) => (
                                             <FaStar
                                                 key={i}
-                                                className={`text-lg ${i < review.rating ? "text-yellow-400" : "text-gray-300"}`}
+                                                className={`text-sm ${i < review.rating ? "text-amber-400" : "text-slate-200"}`}
                                             />
                                         ))}
                                     </div>
-                                    <p className="text-gray-600 text-center">{review.comment}</p>
+
+                                    {/* Comment */}
+                                    <p className="flex-grow mb-8 text-slate-600 italic leading-relaxed">
+                                        "{review.comment}"
+                                    </p>
+
+                                    {/* User Info */}
+                                    <div className="flex items-center gap-4 pt-6 border-slate-50 border-t">
+                                        <img
+                                            src={review.image}
+                                            alt={review.name}
+                                            className="shadow-sm rounded-full ring-2 ring-slate-50 w-14 h-14 object-cover"
+                                        />
+                                        <div>
+                                            <h3 className="font-bold text-slate-800 text-lg leading-tight">
+                                                {review.name}
+                                            </h3>
+                                            <p className="font-medium text-primary text-sm">
+                                                {review.role}
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     ))}
                 </Slider>
             </div>
+            
+            {/* Custom Dot Styling */}
+            <style jsx global>{`
+                .review-slider .slick-dots li button:before {
+                    color: #cbd5e1;
+                    font-size: 10px;
+                }
+                .review-slider .slick-dots li.slick-active button:before {
+                    color: var(--color-primary, #2563eb);
+                }
+            `}</style>
         </section>
     );
 };

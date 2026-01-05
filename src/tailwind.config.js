@@ -4,11 +4,11 @@ export default {
     "./index.html",
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
-  darkMode: 'class', // class ভিত্তিক dark mode
+  darkMode: 'class', 
   theme: {
     extend: {
       colors: {
-        primary: '#39b8ad', // তোমার theme color
+        primary: '#39b8ad',
       },
     },
   },

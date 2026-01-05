@@ -19,6 +19,7 @@ import UpdateCourse from './pages/Courses/UpdateCourse.jsx';
 import Dashboard from './pages/Courses/Dashboard.jsx';
 import PrivateRoute from './pages/Auth/PrivateRoute.jsx';
 import Error from './components/Erorr.jsx';
+import About from './pages/Home/About.jsx';
 
 
 
@@ -34,10 +35,12 @@ const router = createBrowserRouter([
       {
         path: '/allCourses',
         element: (
-          <PrivateRoute>
-            <AllCourses />
-          </PrivateRoute>
+          <AllCourses />
         ),
+      },
+      {
+        path: '/about',
+        Component: About
       },
       {
         path: '/dashboard',
@@ -82,9 +85,7 @@ const router = createBrowserRouter([
       {
         path: '/courseDetails/:id',
         element: (
-          <PrivateRoute>
-            <CourseDetails />
-          </PrivateRoute>
+          <CourseDetails />
         ),
         loader: async ({ params }) => {
           const res = await fetch(`https://skill-path-server-five.vercel.app/courses/${params.id}`);
