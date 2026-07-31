@@ -1,57 +1,127 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FaArrowRight, FaStar, FaBookOpen } from "react-icons/fa";
 
 const Courses = () => {
   const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get("https://skill-path-server-five.vercel.app/courses")
-      .then(res => {
-        setCourses(res.data.slice(0, 6));
+    axios
+      .get("https://skill-path-server-five.vercel.app/courses")
+      .then((res) => {
+        setCourses(res.data.slice(0, 6)); // ল্যান্ডিং পেজের জন্য সেরা ৬টি কোর্স
+        setLoading(false);
       })
-      .catch(err => console.log(err));
+      .catch((err) => {
+        console.error("Error fetching courses:", err);
+        setLoading(false);
+      });
   }, []);
 
   return (
-    <div className="mx-auto mt-20 px-4 py-8 container">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="font-bold text-3xl">Browse Our Best Courses</h2>
-        <button
-          onClick={() => navigate("/allCourses")}
-          className="group shadow-md hover:shadow-lg px-8 border-none font-bold text-white active:scale-95 transition-all hover:translate-x-1 duration-300 btn btn-primary transform"
-        >
-          View All Courses
-          <span className="ml-2 transition-transform group-hover:translate-x-1 duration-200">
-            →
-          </span>
-        </button>
-      </div>
-
-      {/* Courses Grid */}
-      <div className="gap-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 mt-13">
-        {courses.map(course => (
-          <div
-            key={course._id}
-            className="bg-white shadow-lg hover:shadow-2xl rounded-xl overflow-hidden transition-shadow duration-300 cursor-pointer"
-            onClick={() => navigate(`/courseDetails/${course._id}`)}
-          >
-            <img src={course.image} alt={course.title} className="w-full h-48 object-cover" />
-            <div className="p-4">
-              <h3 className="mb-2 font-semibold text-xl">{course.title}</h3>
-              <p className="mb-2 font-bold text-gray-800">Price: ${course.price}</p>
-              <button
-                className="shadow-md hover:shadow-lg mt-4 border-none rounded-xl w-full font-bold text-white active:scale-95 transition-all duration-300 btn btn-primary transform"
-              >
-                View Details
-              </button>
-            </div>
+    <section className="bg-slate-50/50 py-20">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        
+        {/* Section Header */}
+        <div className="flex md:flex-row flex-col justify-between md:items-end gap-6 mb-12">
+          <div className="space-y-2">
+            <span className="inline-block bg-primary/10 px-3.5 py-1.5 rounded-full font-semibold text-primary text-sm uppercase tracking-wider">
+              Popular Programs
+            </span>
+            <h2 className="font-extrabold text-slate-900 text-3xl md:text-4xl tracking-tight">
+              Browse Our Featured Courses
+            </h2>
+            <p className="max-w-xl text-slate-600 text-base">
+              Explore our top-rated courses crafted by industry experts to help you build real-world skills and advance your career.
+            </p>
           </div>
-        ))}
+
+          <Link
+            to="/allCourses"
+            className="group inline-flex justify-center items-center self-start md:self-auto gap-2 bg-white hover:bg-slate-100 shadow-sm px-6 py-3.5 border border-slate-200 rounded-xl font-semibold text-slate-800 hover:text-primary transition-all duration-300"
+          >
+            <span>View All Courses</span>
+            <FaArrowRight className="text-primary transition-transform group-hover:translate-x-1.5 duration-200" />
+          </Link>
+        </div>
+
+        {/* Loading Skeleton */}
+        {loading ? (
+          <div className="gap-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3, 4, 5, 6].map((n) => (
+              <div
+                key={n}
+                className="bg-white shadow-sm p-4 border border-slate-100 rounded-2xl animate-pulse"
+              >
+                <div className="bg-slate-200 mb-4 rounded-xl w-full h-52"></div>
+                <div className="space-y-3">
+                  <div className="bg-slate-200 rounded w-1/3 h-4"></div>
+                  <div className="bg-slate-200 rounded w-3/4 h-6"></div>
+                  <div className="bg-slate-200 mt-4 rounded-xl w-full h-11"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          /* Courses Grid */
+          <div className="gap-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            {courses.map((course) => (
+              <div
+                key={course._id}
+                onClick={() => navigate(`/courseDetails/${course._id}`)}
+                className="group flex flex-col justify-between bg-white shadow-sm hover:shadow-xl border border-slate-100 hover:border-slate-200 rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer"
+              >
+                <div>
+                  {/* Course Image & Price Badge */}
+                  <div className="relative bg-slate-100 w-full h-52 overflow-hidden">
+                    <img
+                      src={
+                        course.image ||
+                        "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=600"
+                      }
+                      alt={course.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="top-3 right-3 absolute bg-white/90 shadow-sm backdrop-blur-md px-3.5 py-1.5 rounded-full font-bold text-primary text-sm">
+                      ${course.price || "0"}
+                    </div>
+                  </div>
+
+                  {/* Course Info */}
+                  <div className="p-6">
+                    <div className="flex justify-between items-center mb-3 font-medium text-slate-500 text-xs">
+                      <span className="flex items-center gap-1.5 bg-slate-100 px-2.5 py-1 rounded-md text-slate-700">
+                        <FaBookOpen className="text-primary" />
+                        {course.category || "Development"}
+                      </span>
+                      <span className="flex items-center gap-1 font-semibold text-amber-500">
+                        <FaStar />
+                        {course.rating || "4.8"}
+                      </span>
+                    </div>
+
+                    <h3 className="font-bold text-slate-900 group-hover:text-primary text-lg line-clamp-2 leading-snug transition-colors duration-200">
+                      {course.title}
+                    </h3>
+                  </div>
+                </div>
+
+                {/* Card Footer Button */}
+                <div className="p-6 pt-0">
+                  <button className="bg-slate-900 group-hover:bg-primary shadow-sm py-3 rounded-xl w-full font-semibold text-white text-sm transition-colors duration-300">
+                    View Details
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
       </div>
-    </div>
+    </section>
   );
 };
 
