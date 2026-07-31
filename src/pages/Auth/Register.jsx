@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router";
-import { FaUser, FaLock, FaEnvelope, FaImage, FaGoogle } from "react-icons/fa";
+import { useNavigate, Link } from "react-router";
+import { FaUser, FaLock, FaEnvelope, FaImage, FaGoogle, FaArrowRight } from "react-icons/fa";
 import { AuthContext } from "../../context/AuthProvider";
 import Swal from "sweetalert2";
 
@@ -18,7 +18,7 @@ const Register = () => {
       showConfirmButton: false,
       timer: 2000,
       timerProgressBar: true,
-      background: icon === "success" ? "#39b8ad" : "#f87171",
+      background: icon === "success" ? "#0D9488" : "#f87171",
       color: "#fff",
     });
   };
@@ -34,32 +34,20 @@ const Register = () => {
     setError("");
 
     createUser(email, password, name, photoURL)
-      .then((user) => {
+      .then(() => {
         showToast("success", "Registration Successful!");
-
-        // Backend e save korar data
         const newUser = { name, email, photoURL };
 
         fetch("https://skill-path-server-five.vercel.app/users", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(newUser),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            console.log("✅ User saved to DB:", data);
-          })
-          .catch((err) => {
-            console.error("❌ Error saving user:", err);
-          });
+        });
 
         form.reset();
         navigate("/");
       })
       .catch((err) => {
-        console.error("Firebase registration error:", err);
         showToast("error", err.message);
         setError(err.message);
       });
@@ -74,13 +62,11 @@ const Register = () => {
           email: googleUser.email,
           photoURL: googleUser.photoURL,
         };
-
         fetch("https://skill-path-server-five.vercel.app/users", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(newUser),
         });
-
         showToast("success", "Google Sign-in Successful!");
         navigate("/");
       })
@@ -91,85 +77,114 @@ const Register = () => {
   };
 
   return (
-    <div className="flex justify-center items-center bg-gradient-to-br p-6 min-h-screen">
-      <div className="bg-white/90 shadow-2xl backdrop-blur-lg p-8 rounded-2xl w-full max-w-md">
-        <h2 className="mb-6 font-bold text-[#39b8ad] text-3xl text-center">
-          Create Account
-        </h2>
-
-        <form onSubmit={handleRegister} className="space-y-5">
-          <div className="relative">
-            <FaUser className="top-3 left-3 absolute text-gray-400" />
-            <input
-              type="text"
-              name="name"
-              placeholder="Full Name"
-              required
-              className="py-2 pr-4 pl-10 border rounded-md focus:outline-none focus:ring-[#39b8ad] focus:ring-2 w-full"
+    <div className="flex justify-center items-center bg-slate-50 p-4 md:p-10 min-h-screen">
+      <div className="flex md:flex-row-reverse flex-col bg-white shadow-2xl border border-slate-100 rounded-[2.5rem] w-full max-w-5xl overflow-hidden">
+        
+        {/* Left Side: Visual/Image Section */}
+        <div className="hidden relative md:flex justify-center items-center bg-[#0D9488] p-12 md:w-1/2 overflow-hidden">
+          <div className="top-[-10%] right-[-10%] absolute bg-white/10 blur-3xl rounded-full w-64 h-64"></div>
+          <div className="bottom-[-10%] left-[-10%] absolute bg-black/10 blur-3xl rounded-full w-64 h-64"></div>
+          
+          <div className="z-10 relative text-white text-center">
+            <img 
+              src="https://img.freepik.com/free-vector/tablet-login-concept-illustration_114360-7883.jpg" 
+              alt="Register illustration" 
+              className="drop-shadow-2xl mx-auto w-full max-w-sm animate-float"
             />
+            <h2 className="mt-8 font-black text-3xl">Join the Community!</h2>
+            <p className="opacity-90 mx-auto mt-4 max-w-xs text-[#e2f3f1]">
+              Create an account today and start your journey to mastering new skills.
+            </p>
           </div>
-
-          <div className="relative">
-            <FaImage className="top-3 left-3 absolute text-gray-400" />
-            <input
-              type="text"
-              name="photoURL"
-              placeholder="Photo URL (optional)"
-              className="py-2 pr-4 pl-10 border rounded-md focus:outline-none focus:ring-[#39b8ad] focus:ring-2 w-full"
-            />
-          </div>
-
-          <div className="relative">
-            <FaEnvelope className="top-3 left-3 absolute text-gray-400" />
-            <input
-              type="email"
-              name="email"
-              placeholder="Email Address"
-              required
-              className="py-2 pr-4 pl-10 border rounded-md focus:outline-none focus:ring-[#39b8ad] focus:ring-2 w-full"
-            />
-          </div>
-
-          <div className="relative">
-            <FaLock className="top-3 left-3 absolute text-gray-400" />
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              required
-              className="py-2 pr-4 pl-10 border rounded-md focus:outline-none focus:ring-[#39b8ad] focus:ring-2 w-full"
-            />
-          </div>
-
-          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
-
-          <button
-            type="submit"
-            className="bg-gradient-to-r from-[#39b8ad] hover:from-[#2ea99f] to-[#2ea99f] hover:to-[#39b8ad] shadow-md py-2 rounded-md w-full font-semibold text-white hover:scale-105 transition-all duration-500"
-          >
-            Register
-          </button>
-        </form>
-
-        <div className="flex items-center my-5">
-          <div className="flex-grow border-gray-300 border-t"></div>
-          <span className="mx-3 text-gray-500 text-sm">OR</span>
-          <div className="flex-grow border-gray-300 border-t"></div>
         </div>
 
-        <button
-          onClick={handleGoogleSignIn}
-          className="flex justify-center items-center gap-2 hover:bg-[#39b8ad] py-2 border border-[#39b8ad] rounded-md w-full font-semibold text-[#39b8ad] hover:text-white transition-all duration-500"
-        >
-          <FaGoogle /> Sign in with Google
-        </button>
+        {/* Right Side: Form Section */}
+        <div className="flex flex-col justify-center p-8 md:p-16 md:w-1/2">
+          <div className="mb-8">
+            <h2 className="font-black text-slate-800 text-3xl tracking-tight">
+              Create <span className="text-[#0D9488]">Account</span>
+            </h2>
+            <p className="mt-2 font-medium text-slate-500">Join us to start learning.</p>
+          </div>
 
-        <p className="mt-5 text-gray-600 text-center">
-          Already have an account?{" "}
-          <a href="/login" className="font-medium text-[#39b8ad] hover:underline">
-            Login here
-          </a>
-        </p>
+          <form onSubmit={handleRegister} className="space-y-4">
+            {/* Full Name */}
+            <div className="relative">
+              <FaUser className="top-1/2 left-4 absolute text-slate-400 -translate-y-1/2" />
+              <input
+                type="text"
+                name="name"
+                placeholder="Full Name"
+                required
+                className="bg-slate-50 py-3.5 pr-4 pl-12 border border-slate-200 focus:border-[#0D9488] rounded-2xl outline-none focus:ring-[#0D9488]/10 focus:ring-4 w-full font-medium transition-all"
+              />
+            </div>
+
+            {/* Photo URL */}
+            <div className="relative">
+              <FaImage className="top-1/2 left-4 absolute text-slate-400 -translate-y-1/2" />
+              <input
+                type="text"
+                name="photoURL"
+                placeholder="Photo URL (Optional)"
+                className="bg-slate-50 py-3.5 pr-4 pl-12 border border-slate-200 focus:border-[#0D9488] rounded-2xl outline-none focus:ring-[#0D9488]/10 focus:ring-4 w-full font-medium transition-all"
+              />
+            </div>
+
+            {/* Email Address */}
+            <div className="relative">
+              <FaEnvelope className="top-1/2 left-4 absolute text-slate-400 -translate-y-1/2" />
+              <input
+                type="email"
+                name="email"
+                placeholder="Email Address"
+                required
+                className="bg-slate-50 py-3.5 pr-4 pl-12 border border-slate-200 focus:border-[#0D9488] rounded-2xl outline-none focus:ring-[#0D9488]/10 focus:ring-4 w-full font-medium transition-all"
+              />
+            </div>
+
+            {/* Password */}
+            <div className="relative">
+              <FaLock className="top-1/2 left-4 absolute text-slate-400 -translate-y-1/2" />
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                required
+                className="bg-slate-50 py-3.5 pr-4 pl-12 border border-slate-200 focus:border-[#0D9488] rounded-2xl outline-none focus:ring-[#0D9488]/10 focus:ring-4 w-full font-medium transition-all"
+              />
+            </div>
+
+            {error && <p className="ml-2 font-medium text-red-500 text-xs">{error}</p>}
+
+            <button
+              type="submit"
+              className="group flex justify-center items-center gap-2 bg-[#0D9488] hover:bg-[#0b7a6f] shadow-[#0D9488]/20 shadow-xl mt-2 py-4 rounded-2xl w-full font-black text-white text-lg active:scale-[0.98] transition-all"
+            >
+              Register Now <FaArrowRight className="transition-transform group-hover:translate-x-1" />
+            </button>
+          </form>
+
+          <div className="flex items-center my-6">
+            <div className="flex-grow border-slate-200 border-t"></div>
+            <span className="mx-4 font-bold text-slate-400 text-xs uppercase">OR</span>
+            <div className="flex-grow border-slate-200 border-t"></div>
+          </div>
+
+          <button
+            onClick={handleGoogleSignIn}
+            className="flex justify-center items-center gap-3 hover:bg-slate-50 py-3.5 border-2 border-slate-100 rounded-2xl w-full font-bold text-slate-700 transition-all"
+          >
+            <FaGoogle className="text-red-500 text-xl" /> Continue with Google
+          </button>
+
+          <p className="mt-8 font-medium text-slate-500 text-center">
+            Already have an account?{" "}
+            <Link to="/login" className="font-black text-[#0D9488] hover:underline">
+              Login here
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
