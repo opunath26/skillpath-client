@@ -12,8 +12,7 @@ const Courses = () => {
     axios
       .get("https://skill-path-server-five.vercel.app/courses")
       .then((res) => {
-        setCourses(res.data.slice(0, 6)); // ল্যান্ডিং পেজের জন্য সেরা ৬টি কোর্স
-        setLoading(false);
+        setCourses(res.data.slice(0, 6));
       })
       .catch((err) => {
         console.error("Error fetching courses:", err);

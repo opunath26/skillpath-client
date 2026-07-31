@@ -1,6 +1,7 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
+
 import "swiper/css";
 
 const partners = [
@@ -14,45 +15,54 @@ const partners = [
 
 const PartnerLogos = () => {
   return (
-    <section className="bg-slate-50/50 py-16 border-slate-100 border-y">
-      <div className="mx-auto px-4 md:px-10 container">
-        {/* Title */}
-        <div className="mb-10 text-center">
-          <p className="mb-2 font-bold text-slate-400 text-xs uppercase tracking-[0.2em]">
-            Trusted by World-Class Companies
+    <section className="relative bg-slate-50/60 py-12 md:py-16 border-slate-100 border-y overflow-hidden">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        
+        {/* Title Section */}
+        <div className="mb-8 md:mb-10 text-center">
+          <p className="font-semibold text-slate-400 text-xs md:text-sm uppercase tracking-[0.2em]">
+            Trusted by World-Class Companies & Universities
           </p>
         </div>
 
-        {/* Logo Slider */}
-        <Swiper
-          modules={[Autoplay]}
-          spaceBetween={50}
-          slidesPerView={2}
-          loop={true}
-          speed={3000}
-          autoplay={{
-            delay: 0,
-            disableOnInteraction: false,
-          }}
-          breakpoints={{
-            640: { slidesPerView: 3 },
-            768: { slidesPerView: 4 },
-            1024: { slidesPerView: 5 },
-          }}
-          className="flex items-center"
-        >
-          {partners.map((partner, index) => (
-            <SwiperSlide key={index} className="flex justify-center items-center">
-              <div className="opacity-50 hover:opacity-100 grayscale hover:grayscale-0 p-4 transition-all duration-500 cursor-pointer">
-                <img
-                  src={partner.logo}
-                  alt={partner.name}
-                  className="mx-auto w-auto h-8 md:h-10 object-contain"
-                />
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        {/* Swiper Slider Wrapper with Side Fading Overlay */}
+        <div className="relative">
+          {/* Left & Right Fade Overlay for Smooth Edges */}
+          <div className="hidden sm:block top-0 bottom-0 left-0 z-10 absolute bg-gradient-to-r from-slate-50 to-transparent w-16 pointer-events-none" />
+          <div className="hidden sm:block top-0 right-0 bottom-0 z-10 absolute bg-gradient-to-l from-slate-50 to-transparent w-16 pointer-events-none" />
+
+          <Swiper
+            modules={[Autoplay]}
+            spaceBetween={24}
+            slidesPerView={2}
+            loop={true}
+            speed={4000}
+            autoplay={{
+              delay: 0,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true,
+            }}
+            breakpoints={{
+              480: { slidesPerView: 3, spaceBetween: 30 },
+              768: { slidesPerView: 4, spaceBetween: 40 },
+              1024: { slidesPerView: 5, spaceBetween: 50 },
+            }}
+            className="flex items-center !ease-linear partner-swiper"
+          >
+            {partners.map((partner, index) => (
+              <SwiperSlide key={index} className="flex justify-center items-center py-2">
+                <div className="group flex justify-center items-center p-3 md:p-4 rounded-xl transition-all duration-300 cursor-pointer">
+                  <img
+                    src={partner.logo}
+                    alt={partner.name}
+                    className="opacity-60 group-hover:opacity-100 grayscale group-hover:grayscale-0 w-auto max-w-[110px] sm:max-w-[130px] md:max-w-[150px] h-7 sm:h-9 md:h-10 object-contain group-hover:scale-105 transition-all duration-300 filter"
+                  />
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+
       </div>
     </section>
   );
