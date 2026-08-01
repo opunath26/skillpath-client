@@ -39,7 +39,6 @@ const CTASection = () => {
             {/* Right Action Buttons */}
             <div className="flex sm:flex-row xl:flex-row flex-col lg:flex-col gap-3.5 sm:gap-4 w-full sm:w-auto lg:min-w-[280px]">
               
-              {/* 3. ইউজার লগইন থাকলে /allCourses পেজে পাঠাবে, না থাকলে /register পেজে পাঠাবে */}
               <Link
                 to={user ? "/allCourses" : "/register"}
                 className="group flex justify-center items-center gap-2 bg-white hover:bg-amber-300 shadow-lg px-7 py-3.5 sm:py-4 rounded-xl font-bold text-[#0D9488] hover:text-slate-900 text-sm sm:text-base active:scale-95 transition-all duration-300"
