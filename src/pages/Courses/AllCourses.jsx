@@ -64,10 +64,11 @@ const AllCourses = () => {
             <button
               key={index}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-5 py-2 rounded-md text-sm font-medium transition-all duration-200 border ${selectedCategory === cat
+              className={`px-5 py-2 rounded-md text-sm font-medium transition-all duration-200 border ${
+                selectedCategory === cat
                   ? "bg-slate-900 text-white border-slate-900 shadow-sm"
                   : "bg-white text-slate-600 border-slate-200 hover:border-slate-400"
-                }`}
+              }`}
             >
               {cat}
             </button>
@@ -89,7 +90,7 @@ const AllCourses = () => {
       {/* Courses Grid */}
       {filteredCourses.length > 0 ? (
         <div className="gap-5 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4">
-          {filteredCourses.map(course => (
+          {filteredCourses.map((course) => (
             <div
               key={course._id}
               onClick={() => navigate(`/courseDetails/${course._id}`)}
@@ -97,10 +98,14 @@ const AllCourses = () => {
             >
               {/* Image with subtle zoom effect */}
               <div className="relative aspect-video overflow-hidden">
+                {/* 🎯 সংশোধিত লাইন: course.image-এর বদলে course.thumbnail দেওয়া হয়েছে */}
                 <img
-                  src={course.image}
+                  src={course.thumbnail}
                   alt={course.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  onError={(e) => {
+                    e.target.src = "https://i.ibb.co/7dcxqMXV/typescript.png"; // Fallback image
+                  }}
                 />
                 <div className="top-4 left-4 absolute bg-white/90 shadow-sm backdrop-blur-sm px-3 py-1 border border-slate-200 rounded-full font-bold text-slate-800 text-xs">
                   {course.category}
@@ -132,25 +137,22 @@ const AllCourses = () => {
                   </div>
                 </div>
 
-                {/* Action Button - Minimalist */}
+                {/* Action Button */}
                 <div className="mt-auto">
-                  <button
-                    className="shadow-md border-none w-full font-bold text-white active:scale-95 transition-transform btn btn-primary"
-                  >
+                  <button className="shadow-md border-none w-full font-bold text-white active:scale-95 transition-transform btn btn-primary">
                     View Details
                   </button>
                 </div>
               </div>
             </div>
-      ))}
+          ))}
+        </div>
+      ) : (
+        <div className="py-20 text-center">
+          <p className="text-slate-400 text-lg italic">No courses found matching your criteria.</p>
+        </div>
+      )}
     </div>
-  ) : (
-    <div className="py-20 text-center">
-      <p className="text-slate-400 text-lg italic">No courses found matching your criteria.</p>
-    </div>
-  )
-}
-    </div >
   );
 };
 
