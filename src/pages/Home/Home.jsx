@@ -11,6 +11,7 @@ import Reviews from './Reviews';
 import FAQ from './FAQ';
 import CTASection from './CTASection';
 import CourseFinder from './CourseFinder';
+import CommunityBanner from './CommunityBanner';
 
 const Home = () => {
     return (
@@ -27,6 +28,7 @@ const Home = () => {
             <FAQ />
             <CTASection />
             <CourseFinder />
+            <CommunityBanner />
         </div>
     );
 };
