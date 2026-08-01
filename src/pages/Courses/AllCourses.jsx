@@ -98,13 +98,12 @@ const AllCourses = () => {
             >
               {/* Image with subtle zoom effect */}
               <div className="relative aspect-video overflow-hidden">
-                {/* 🎯 সংশোধিত লাইন: course.image-এর বদলে course.thumbnail দেওয়া হয়েছে */}
                 <img
                   src={course.thumbnail}
                   alt={course.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   onError={(e) => {
-                    e.target.src = "https://i.ibb.co/7dcxqMXV/typescript.png"; // Fallback image
+                    e.target.src = "https://i.ibb.co/7dcxqMXV/typescript.png";
                   }}
                 />
                 <div className="top-4 left-4 absolute bg-white/90 shadow-sm backdrop-blur-sm px-3 py-1 border border-slate-200 rounded-full font-bold text-slate-800 text-xs">
