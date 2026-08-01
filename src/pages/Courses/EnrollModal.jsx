@@ -2,7 +2,18 @@ import React, { useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthProvider.jsx";
 import { useLoaderData, useNavigate } from "react-router";
 import Swal from "sweetalert2";
-import { FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaImage, FaCreditCard, FaLock } from "react-icons/fa";
+import {
+  FaUser,
+  FaEnvelope,
+  FaPhone,
+  FaMapMarkerAlt,
+  FaLock,
+  FaCreditCard,
+  FaMobileAlt,
+  FaCheckCircle,
+  FaSpinner,
+  FaChalkboardTeacher,
+} from "react-icons/fa";
 
 const EnrollModal = () => {
   const course = useLoaderData();
@@ -15,13 +26,17 @@ const EnrollModal = () => {
     phone: "",
     address: "",
     photoUrl: user?.photoURL || "",
-    paymentOption: "",
+    paymentOption: "Bkash",
   });
 
   const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handlePaymentSelect = (method) => {
+    setFormData({ ...formData, paymentOption: method });
   };
 
   const showToast = (icon, title) => {
@@ -45,6 +60,11 @@ const EnrollModal = () => {
       return;
     }
 
+    if (!formData.paymentOption) {
+      showToast("error", "Please select a payment method!");
+      return;
+    }
+
     const enrollmentData = {
       courseId: course._id,
       courseTitle: course.title,
@@ -53,9 +73,9 @@ const EnrollModal = () => {
       fullName: formData.fullName,
       phone: formData.phone,
       address: formData.address,
-      photoUrl: course.thumbnail || course.image, // Corrected key
+      photoUrl: course.thumbnail || course.image,
       paymentOption: formData.paymentOption,
-      createdAt: new Date(),
+      createdAt: new Date().toISOString(),
     };
 
     try {
@@ -80,129 +100,196 @@ const EnrollModal = () => {
     }
   };
 
+  const paymentMethods = [
+    { id: "Bkash", name: "bKash", icon: FaMobileAlt, color: "text-pink-600", bg: "bg-pink-50 border-pink-200" },
+    { id: "Nagad", name: "Nagad", icon: FaMobileAlt, color: "text-orange-600", bg: "bg-orange-50 border-orange-200" },
+    { id: "Credit Card", name: "Card", icon: FaCreditCard, color: "text-blue-600", bg: "bg-blue-50 border-blue-200" },
+  ];
+
   return (
-    <div className="bg-slate-50 px-4 py-12 min-h-screen">
-      <div className="bg-white shadow-2xl mx-auto border border-slate-100 rounded-[2.5rem] max-w-5xl overflow-hidden">
-        <div className="grid lg:grid-cols-5">
+    <div className="flex justify-center items-center bg-slate-50/50 px-4 py-10 min-h-screen">
+      <div className="bg-white/90 shadow-2xl backdrop-blur-md mx-auto border border-slate-200/80 rounded-3xl max-w-5xl overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-5">
           
-          {/* Left Side: Course Summary */}
-          <div className="lg:col-span-2 bg-slate-900 p-8 md:p-12 text-white">
-            <h4 className="mb-4 font-bold text-[#0D9488] text-xs uppercase tracking-widest">Enrollment Summary</h4>
-            <h2 className="mb-6 font-black text-2xl md:text-3xl leading-tight">
-              {course.title}
-            </h2>
-            
-            <div className="space-y-6">
-                <img src={course.image || course.thumbnail} alt="" className="border border-white/10 rounded-2xl w-full h-40 object-cover" />
-                
-                <div className="flex justify-between items-center py-4 border-white/10 border-b">
-                    <span className="text-slate-400">Instructor</span>
-                    <span className="font-semibold">{course.instructorName}</span>
+          {/* Left Side: Course Summary Card */}
+          <div className="relative flex flex-col justify-between lg:col-span-2 bg-gradient-to-br from-slate-900 via-teal-950 to-slate-900 p-8 md:p-10 overflow-hidden text-white">
+            <div className="top-0 right-0 absolute bg-teal-500/10 blur-3xl rounded-full w-64 h-64 pointer-events-none" />
+
+            <div>
+              <div className="inline-flex items-center gap-2 bg-teal-500/10 backdrop-blur-md mb-6 px-3 py-1.5 border border-teal-500/20 rounded-full">
+                <span className="bg-teal-400 rounded-full w-2 h-2 animate-pulse" />
+                <span className="font-semibold text-teal-300 text-xs uppercase tracking-wider">Enrollment Checkout</span>
+              </div>
+
+              <h2 className="mb-4 font-extrabold text-2xl md:text-3xl leading-tight">
+                {course?.title || "Course Enrollment"}
+              </h2>
+
+              <div className="shadow-md my-6 border border-white/10 rounded-2xl aspect-video overflow-hidden">
+                <img
+                  src={course?.image || course?.thumbnail || "https://i.ibb.co/mJR9n0K/user-placeholder.png"}
+                  alt={course?.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              <div className="space-y-3 pt-2 border-white/10 border-t">
+                <div className="flex justify-between items-center text-sm">
+                  <span className="flex items-center gap-2 text-slate-300">
+                    <FaChalkboardTeacher className="text-teal-400" /> Instructor
+                  </span>
+                  <span className="font-medium text-slate-100">{course?.instructorName || "N/A"}</span>
                 </div>
-                
-                <div className="flex justify-between items-center py-4 border-white/10 border-b">
-                    <span className="text-slate-400">Total Price</span>
-                    <span className="font-black text-[#0D9488] text-2xl">৳{course.price}</span>
+
+                <div className="flex justify-between items-center pt-3 border-white/10 border-t text-sm">
+                  <span className="text-slate-300">Total Course Fee</span>
+                  <span className="font-black text-teal-400 text-2xl">৳{course?.price || "0"}</span>
                 </div>
+              </div>
             </div>
 
-            <div className="bg-white/5 mt-12 p-6 border border-white/5 rounded-2xl">
-                <div className="flex items-center gap-3 text-slate-300 text-sm">
-                    <FaLock className="text-[#0D9488]" />
-                    <span>Secure Enrollment Process</span>
+            {/* Trust Badge */}
+            <div className="bg-white/5 backdrop-blur-sm mt-8 p-4 border border-white/10 rounded-2xl">
+              <div className="flex items-center gap-3 text-slate-300 text-xs">
+                <div className="flex justify-center items-center bg-teal-500/20 rounded-xl w-8 h-8 shrink-0">
+                  <FaLock className="text-teal-400" />
                 </div>
+                <div>
+                  <p className="font-bold text-white">Encrypted & Secure</p>
+                  <p className="text-slate-400">Your information is fully protected.</p>
+                </div>
+              </div>
             </div>
           </div>
 
           {/* Right Side: Form */}
-          <div className="lg:col-span-3 p-8 md:p-12">
-            <h3 className="mb-8 font-bold text-slate-800 text-2xl">Personal Information</h3>
-            
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="gap-5 grid md:grid-cols-2">
-                {/* Full Name */}
-                <div className="relative">
-                  <FaUser className="top-1/2 left-4 absolute text-slate-400 -translate-y-1/2" />
-                  <input
-                    type="text"
-                    name="fullName"
-                    placeholder="Full Name"
-                    value={formData.fullName}
-                    onChange={handleChange}
-                    required
-                    className="bg-slate-50 py-3.5 pr-4 pl-12 border border-slate-200 focus:border-[#0D9488] rounded-xl outline-none focus:ring-[#0D9488] focus:ring-2 w-full transition-all"
-                  />
+          <div className="lg:col-span-3 p-6 md:p-10">
+            <div className="mb-6">
+              <h3 className="font-extrabold text-slate-800 text-2xl">Student Information</h3>
+              <p className="text-slate-500 text-xs md:text-sm">Please provide your details to complete enrollment</p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              
+              {/* Full Name & Email */}
+              <div className="gap-4 grid grid-cols-1 md:grid-cols-2">
+                <div>
+                  <label className="block mb-1 font-bold text-slate-700 text-xs uppercase tracking-wider">
+                    Full Name
+                  </label>
+                  <div className="relative">
+                    <FaUser className="top-1/2 left-3.5 absolute text-slate-400 -translate-y-1/2" />
+                    <input
+                      type="text"
+                      name="fullName"
+                      placeholder="Your Full Name"
+                      value={formData.fullName}
+                      onChange={handleChange}
+                      required
+                      className="bg-slate-50 py-3 pr-4 pl-10 border border-slate-200 focus:border-teal-600 rounded-xl focus:outline-none focus:ring-4 focus:ring-teal-600/10 w-full text-sm transition-all"
+                    />
+                  </div>
                 </div>
 
-                {/* Email */}
-                <div className="relative">
-                  <FaEnvelope className="top-1/2 left-4 absolute text-slate-400 -translate-y-1/2" />
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Email Address"
-                    value={formData.email}
-                    readOnly
-                    className="bg-slate-100 py-3.5 pr-4 pl-12 border border-slate-200 rounded-xl outline-none w-full text-slate-500 cursor-not-allowed"
-                  />
+                <div>
+                  <label className="block mb-1 font-bold text-slate-700 text-xs uppercase tracking-wider">
+                    Email Address
+                  </label>
+                  <div className="relative">
+                    <FaEnvelope className="top-1/2 left-3.5 absolute text-slate-400 -translate-y-1/2" />
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      readOnly
+                      className="bg-slate-100 py-3 pr-4 pl-10 border border-slate-200 rounded-xl w-full text-slate-500 text-sm cursor-not-allowed"
+                    />
+                  </div>
                 </div>
               </div>
 
-              <div className="gap-5 grid md:grid-cols-2">
-                {/* Phone */}
+              {/* Phone Number */}
+              <div>
+                <label className="block mb-1 font-bold text-slate-700 text-xs uppercase tracking-wider">
+                  Phone Number
+                </label>
                 <div className="relative">
-                  <FaPhone className="top-1/2 left-4 absolute text-slate-400 -translate-y-1/2" />
+                  <FaPhone className="top-1/2 left-3.5 absolute text-slate-400 -translate-y-1/2" />
                   <input
-                    type="text"
+                    type="tel"
                     name="phone"
-                    placeholder="Phone Number"
+                    placeholder="017XXXXXXXX"
                     value={formData.phone}
                     onChange={handleChange}
                     required
-                    className="bg-slate-50 py-3.5 pr-4 pl-12 border border-slate-200 focus:border-[#0D9488] rounded-xl outline-none focus:ring-[#0D9488] focus:ring-2 w-full transition-all"
+                    className="bg-slate-50 py-3 pr-4 pl-10 border border-slate-200 focus:border-teal-600 rounded-xl focus:outline-none focus:ring-4 focus:ring-teal-600/10 w-full text-sm transition-all"
                   />
-                </div>
-
-                {/* Payment Option */}
-                <div className="relative">
-                  <FaCreditCard className="top-1/2 left-4 absolute text-slate-400 -translate-y-1/2" />
-                  <select
-                    name="paymentOption"
-                    value={formData.paymentOption}
-                    onChange={handleChange}
-                    required
-                    className="bg-slate-50 py-3.5 pr-4 pl-12 border border-slate-200 focus:border-[#0D9488] rounded-xl outline-none focus:ring-[#0D9488] focus:ring-2 w-full transition-all appearance-none cursor-pointer"
-                  >
-                    <option value="">Select Payment</option>
-                    <option value="Credit Card">Credit Card</option>
-                    <option value="Bkash">Bkash</option>
-                    <option value="Nagad">Nagad</option>
-                  </select>
                 </div>
               </div>
 
               {/* Address */}
-              <div className="relative">
-                <FaMapMarkerAlt className="top-4 left-4 absolute text-slate-400" />
-                <textarea
-                  name="address"
-                  placeholder="Billing Address"
-                  rows="3"
-                  value={formData.address}
-                  onChange={handleChange}
-                  required
-                  className="bg-slate-50 py-3.5 pr-4 pl-12 border border-slate-200 focus:border-[#0D9488] rounded-xl outline-none focus:ring-[#0D9488] focus:ring-2 w-full transition-all resize-none"
-                ></textarea>
+              <div>
+                <label className="block mb-1 font-bold text-slate-700 text-xs uppercase tracking-wider">
+                  Billing Address
+                </label>
+                <div className="relative">
+                  <FaMapMarkerAlt className="top-3.5 left-3.5 absolute text-slate-400" />
+                  <textarea
+                    name="address"
+                    placeholder="Enter your full address"
+                    rows="2"
+                    value={formData.address}
+                    onChange={handleChange}
+                    required
+                    className="bg-slate-50 py-2.5 pr-4 pl-10 border border-slate-200 focus:border-teal-600 rounded-xl focus:outline-none focus:ring-4 focus:ring-teal-600/10 w-full text-sm transition-all resize-none"
+                  ></textarea>
+                </div>
               </div>
 
+              {/* Payment Method Selector Cards */}
+              <div className="pt-2">
+                <label className="block mb-2 font-bold text-slate-700 text-xs uppercase tracking-wider">
+                  Select Payment Method
+                </label>
+                <div className="gap-3 grid grid-cols-3">
+                  {paymentMethods.map((method) => {
+                    const Icon = method.icon;
+                    const isSelected = formData.paymentOption === method.id;
+                    return (
+                      <button
+                        key={method.id}
+                        type="button"
+                        onClick={() => handlePaymentSelect(method.id)}
+                        className={`p-3 rounded-2xl border text-center transition-all flex flex-col items-center gap-1.5 cursor-pointer relative ${
+                          isSelected
+                            ? "border-teal-600 bg-teal-50/60 shadow-sm ring-2 ring-teal-600/20"
+                            : "border-slate-200 bg-slate-50 hover:bg-slate-100/80"
+                        }`}
+                      >
+                        {isSelected && (
+                          <FaCheckCircle className="top-1.5 right-1.5 absolute text-teal-600 text-xs" />
+                        )}
+                        <Icon className={`text-xl ${method.color}`} />
+                        <span className="font-bold text-slate-800 text-xs">{method.name}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={submitting}
-                className={`w-full py-4 rounded-xl font-black text-lg transition-all shadow-xl active:scale-95 flex justify-center items-center gap-2 ${
-                  submitting ? "bg-slate-300 cursor-not-allowed" : "bg-[#0D9488] hover:bg-[#0b7a6f] text-white shadow-[#0D9488]/20"
-                }`}
+                className="flex justify-center items-center gap-2 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 disabled:opacity-70 shadow-lg shadow-teal-600/20 mt-4 py-3.5 rounded-2xl w-full font-extrabold text-white text-base active:scale-[0.99] transition-all cursor-pointer disabled:cursor-not-allowed"
               >
-                {submitting ? "Processing..." : "Confirm Enrollment"}
+                {submitting ? (
+                  <>
+                    <FaSpinner className="text-lg animate-spin" /> Processing...
+                  </>
+                ) : (
+                  `Confirm & Enroll (৳${course?.price || 0})`
+                )}
               </button>
             </form>
           </div>
