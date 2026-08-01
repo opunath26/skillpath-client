@@ -10,6 +10,7 @@ import TopInstructors from './TopInstructors';
 import Reviews from './Reviews';
 import FAQ from './FAQ';
 import CTASection from './CTASection';
+import CourseFinder from './CourseFinder';
 
 const Home = () => {
     return (
@@ -25,6 +26,7 @@ const Home = () => {
             <Reviews />
             <FAQ />
             <CTASection />
+            <CourseFinder />
         </div>
     );
 };
