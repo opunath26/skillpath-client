@@ -32,61 +32,86 @@ const faqData = [
 const FAQ = () => {
   const [openIndex, setOpenIndex] = useState(null);
 
-  return (
-    <section className="relative bg-gradient-to-br from-[#f8fffe] to-[#eef9f8] py-20">
-      <div className="mx-auto px-4 max-w-6xl">
-        <h2 className="mb-4 font-bold text-gray-800 text-4xl text-center">
-          Frequently Asked Questions
-        </h2>
-        <p className="mb-14 text-gray-600 text-center">
-          Everything you need to know before getting started
-        </p>
+  const toggleFAQ = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
 
-        <div className="space-y-6">
+  return (
+    <section className="relative bg-white py-16 md:py-24 overflow-hidden">
+      {/* Background Glow */}
+      <div className="top-1/2 left-0 absolute bg-teal-500/5 blur-[120px] rounded-full w-72 h-72 pointer-events-none" />
+
+      <div className="relative mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+        
+        {/* Section Header */}
+        <div className="space-y-3 mx-auto mb-12 md:mb-16 max-w-2xl text-center">
+          <span className="inline-block bg-teal-50 px-3.5 py-1.5 border border-teal-100 rounded-full font-semibold text-[#0D9488] text-xs md:text-sm uppercase tracking-wider">
+            Got Questions?
+          </span>
+          <h2 className="font-extrabold text-slate-900 text-3xl sm:text-4xl tracking-tight">
+            Frequently Asked Questions
+          </h2>
+          <p className="text-slate-600 text-sm md:text-base leading-relaxed">
+            Everything you need to know about our platform, courses, and learning process.
+          </p>
+        </div>
+
+        {/* FAQ Accordion List */}
+        <div className="space-y-4">
           {faqData.map((faq, index) => {
             const isOpen = openIndex === index;
 
             return (
               <div
                 key={index}
-                className={`group relative overflow-hidden rounded-xl border bg-white transition-all duration-300 ${
+                className={`group relative overflow-hidden rounded-2xl border bg-white transition-all duration-300 ${
                   isOpen
-                    ? "border-[#39b8ad] shadow-lg"
-                    : "border-gray-200 hover:shadow-md"
+                    ? "border-teal-200 shadow-lg shadow-teal-500/5"
+                    : "border-slate-100 hover:border-slate-200 shadow-sm hover:shadow-md"
                 }`}
               >
                 {/* Left Accent Bar */}
                 <div
-                  className={`absolute left-0 top-0 h-full w-1 transition-all duration-300 ${
-                    isOpen ? "bg-[#39b8ad]" : "bg-transparent"
+                  className={`absolute left-0 top-0 h-full w-1.5 transition-all duration-300 ${
+                    isOpen ? "bg-[#0D9488]" : "bg-transparent"
                   }`}
                 />
 
                 <button
-                  onClick={() =>
-                    setOpenIndex(isOpen ? null : index)
-                  }
-                  className="flex items-center gap-4 px-6 py-5 w-full text-left"
+                  onClick={() => toggleFAQ(index)}
+                  className="flex justify-between items-center gap-4 p-5 sm:p-6 w-full text-left transition-colors duration-200"
                 >
-                  {/* Number Badge */}
-                  <span className="flex flex-shrink-0 justify-center items-center bg-[#39b8ad]/10 rounded-full w-9 h-9 font-semibold text-[#39b8ad]">
-                    {index + 1}
-                  </span>
+                  <div className="flex flex-1 items-center gap-3.5 sm:gap-4">
+                    {/* Number Badge */}
+                    <span
+                      className={`flex flex-shrink-0 justify-center items-center rounded-xl w-8 h-8 sm:w-9 sm:h-9 font-bold text-xs sm:text-sm transition-colors duration-300 ${
+                        isOpen
+                          ? "bg-[#0D9488] text-white shadow-sm"
+                          : "bg-teal-50 text-[#0D9488]"
+                      }`}
+                    >
+                      0{index + 1}
+                    </span>
 
-                  {/* Question */}
-                  <span className="flex-1 font-medium text-gray-800 text-lg">
-                    {faq.question}
-                  </span>
+                    {/* Question */}
+                    <span className="font-bold text-slate-900 group-hover:text-[#0D9488] text-base sm:text-lg transition-colors duration-200">
+                      {faq.question}
+                    </span>
+                  </div>
 
-                  {/* Icon */}
-                  <FaChevronDown
-                    className={`text-[#39b8ad] transition-transform duration-300 ${
-                      isOpen ? "rotate-180" : ""
+                  {/* Toggle Arrow Icon */}
+                  <div
+                    className={`flex items-center justify-center w-8 h-8 rounded-full transition-transform duration-300 ${
+                      isOpen
+                        ? "bg-teal-50 text-[#0D9488] rotate-180"
+                        : "bg-slate-50 text-slate-400 group-hover:text-slate-600"
                     }`}
-                  />
+                  >
+                    <FaChevronDown className="text-xs sm:text-sm" />
+                  </div>
                 </button>
 
-                {/* Answer */}
+                {/* Smooth Expanding Answer Box */}
                 <div
                   className={`grid transition-all duration-300 ease-in-out ${
                     isOpen
@@ -94,14 +119,17 @@ const FAQ = () => {
                       : "grid-rows-[0fr] opacity-0"
                   }`}
                 >
-                  <div className="px-6 pb-6 pl-[4.25rem] overflow-hidden text-gray-600 leading-relaxed">
-                    {faq.answer}
+                  <div className="overflow-hidden">
+                    <p className="px-5 sm:px-6 pt-0 pb-6 sm:pl-[4.25rem] text-slate-600 text-xs sm:text-sm leading-relaxed">
+                      {faq.answer}
+                    </p>
                   </div>
                 </div>
               </div>
             );
           })}
         </div>
+
       </div>
     </section>
   );
