@@ -1,50 +1,50 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
-import { createBrowserRouter } from "react-router";
-import { RouterProvider } from "react-router/dom";
-import RootLayout from './layout/RootLayout.jsx';
-import Home from './pages/Home/Home.jsx';
-import AllCourses from './pages/Courses/AllCourses.jsx';
-import AuthProvider from './context/AuthProvider.jsx';
-import Register from './pages/Auth/Register.jsx';
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-import Login from './pages/Auth/Login.jsx';
-import AddCourse from './pages/Courses/AddCourse.jsx';
-import MyCourses from './pages/Courses/MyCourses.jsx';
-import CourseDetails from './pages/Courses/CourseDetails.jsx';
-import EnrollModal from './pages/Courses/EnrollModal.jsx';
-import UpdateCourse from './pages/Courses/UpdateCourse.jsx';
-import Dashboard from './pages/Courses/Dashboard.jsx';
-import PrivateRoute from './pages/Auth/PrivateRoute.jsx';
-import Error from './components/Erorr.jsx';
-import About from './pages/Home/About.jsx';
-import Profile from './Dashboard/Profile.jsx';
 
+import "./index.css";
+import AuthProvider from "./context/AuthProvider.jsx";
 
+// Layouts & Pages
+import RootLayout from "./layout/RootLayout.jsx";
+import Home from "./pages/Home/Home.jsx";
+import About from "./pages/Home/About.jsx";
+import AllCourses from "./pages/Courses/AllCourses.jsx";
+import AddCourse from "./pages/Courses/AddCourse.jsx";
+import MyCourses from "./pages/Courses/MyCourses.jsx";
+import CourseDetails from "./pages/Courses/CourseDetails.jsx";
+import EnrollModal from "./pages/Courses/EnrollModal.jsx";
+import UpdateCourse from "./pages/Courses/UpdateCourse.jsx";
+import Dashboard from "./pages/Courses/Dashboard.jsx";
+import Profile from "./Dashboard/Profile.jsx";
+
+// Auth & Error Pages
+import Register from "./pages/Auth/Register.jsx";
+import Login from "./pages/Auth/Login.jsx";
+import PrivateRoute from "./pages/Auth/PrivateRoute.jsx";
+import Error from "./components/Error.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    Component: RootLayout,
+    element: <RootLayout />,
+    errorElement: <Error />,
     children: [
       {
         index: true,
-        Component: Home,
+        element: <Home />,
       },
       {
-        path: '/allCourses',
-        element: (
-          <AllCourses />
-        ),
+        path: "allCourses",
+        element: <AllCourses />,
       },
       {
-        path: '/about',
-        Component: About
+        path: "about",
+        element: <About />,
       },
       {
-        path: '/dashboard',
+        path: "dashboard",
         element: (
           <PrivateRoute>
             <Dashboard />
@@ -52,13 +52,13 @@ const router = createBrowserRouter([
         ),
         children: [
           {
-            path: 'profile',
-            element: <Profile />
-          }
-        ]
+            path: "profile",
+            element: <Profile />,
+          },
+        ],
       },
       {
-        path: '/addCourse',
+        path: "addCourse",
         element: (
           <PrivateRoute>
             <AddCourse />
@@ -66,7 +66,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/myCourse',
+        path: "myCourse",
         element: (
           <PrivateRoute>
             <MyCourses />
@@ -74,28 +74,30 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/enrollModal/:id',
+        path: "enrollModal/:id",
         element: (
           <PrivateRoute>
             <EnrollModal />
           </PrivateRoute>
         ),
         loader: async ({ params }) => {
-          const res = await fetch(`https://skill-path-server-five.vercel.app/courses/${params.id}`);
+          const res = await fetch(
+            `https://skill-path-server-five.vercel.app/courses/${params.id}`
+          );
           if (!res.ok) {
             throw new Response("Course not found", { status: res.status });
           }
           const data = await res.json();
-          return data.result;
-        }
+          return data.result || data;
+        },
       },
       {
-        path: '/courseDetails/:id',
-        element: (
-          <CourseDetails />
-        ),
+        path: "courseDetails/:id",
+        element: <CourseDetails />,
         loader: async ({ params }) => {
-          const res = await fetch(`https://skill-path-server-five.vercel.app/courses/${params.id}`);
+          const res = await fetch(
+            `https://skill-path-server-five.vercel.app/courses/${params.id}`
+          );
           if (!res.ok) {
             throw new Response("Course not found", { status: res.status });
           }
@@ -103,37 +105,38 @@ const router = createBrowserRouter([
         },
       },
       {
-        path: '/updateCourse/:id',
+        path: "updateCourse/:id",
         element: (
-          <UpdateCourse />
+          <PrivateRoute>
+            <UpdateCourse />
+          </PrivateRoute>
         ),
-        loader: ({ params }) => {
-          return fetch(`https://skill-path-server-five.vercel.app/courses/${params.id}`);
-        },
+        loader: ({ params }) =>
+          fetch(
+            `https://skill-path-server-five.vercel.app/courses/${params.id}`
+          ),
       },
       {
-        path: '/register',
-        Component: Register
+        path: "register",
+        element: <Register />,
       },
       {
-        path: '/login',
-        Component: Login
+        path: "login",
+        element: <Login />,
       },
       {
-        path: '*',
-        Component: Error
-      }
-    ]
+        path: "*",
+        element: <Error />,
+      },
+    ],
   },
 ]);
 
-
-
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
       <RouterProvider router={router} />
     </AuthProvider>
     <Toaster position="top-center" reverseOrder={false} />
-  </StrictMode>,
-)
+  </StrictMode>
+);
