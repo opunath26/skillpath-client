@@ -10,8 +10,7 @@ const stats = [
     number: 15000,
     suffix: "+",
     icon: <FaUsers />,
-    bgColor: "bg-blue-50 text-blue-600 border-blue-100",
-    hoverBg: "group-hover:bg-blue-600 group-hover:text-white",
+    iconBg: "bg-blue-500/10 text-blue-400 border-blue-500/20",
   },
   {
     id: 2,
@@ -19,8 +18,7 @@ const stats = [
     number: 1200,
     suffix: "+",
     icon: <FaBookReader />,
-    bgColor: "bg-teal-50 text-[#0D9488] border-teal-100",
-    hoverBg: "group-hover:bg-[#0D9488] group-hover:text-white",
+    iconBg: "bg-teal-500/10 text-teal-400 border-teal-500/20",
   },
   {
     id: 3,
@@ -28,8 +26,7 @@ const stats = [
     number: 350,
     suffix: "+",
     icon: <FaChalkboardTeacher />,
-    bgColor: "bg-purple-50 text-purple-600 border-purple-100",
-    hoverBg: "group-hover:bg-purple-600 group-hover:text-white",
+    iconBg: "bg-purple-500/10 text-purple-400 border-purple-500/20",
   },
   {
     id: 4,
@@ -38,41 +35,41 @@ const stats = [
     decimals: 1,
     suffix: "%",
     icon: <FaAward />,
-    bgColor: "bg-amber-50 text-amber-600 border-amber-100",
-    hoverBg: "group-hover:bg-amber-500 group-hover:text-white",
+    iconBg: "bg-amber-500/10 text-amber-400 border-amber-500/20",
   },
 ];
 
 const StatsSection = () => {
-  // Trigger animation when the section enters the viewport
   const { ref, inView } = useInView({
     triggerOnce: true,
     threshold: 0.2,
   });
 
   return (
-    <section ref={ref} className="relative bg-slate-50/60 py-16 md:py-20 border-slate-100 border-y overflow-hidden">
-      {/* Background Subtle Gradient Blurs */}
-      <div className="top-0 left-1/4 absolute bg-teal-500/5 blur-[100px] rounded-full w-72 h-72 pointer-events-none" />
-      <div className="right-1/4 bottom-0 absolute bg-blue-500/5 blur-[100px] rounded-full w-72 h-72 pointer-events-none" />
+    <section ref={ref} className="relative bg-gradient-to-r from-slate-900 via-teal-950 to-slate-900 py-16 md:py-20 overflow-hidden text-white">
+      {/* Background Glow Overlay */}
+      <div className="top-1/2 left-1/2 absolute bg-teal-500/10 blur-[120px] rounded-full w-[500px] h-[500px] -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
 
       <div className="relative mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-        <div className="gap-4 sm:gap-6 md:gap-8 grid grid-cols-2 lg:grid-cols-4">
-          {stats.map((stat) => (
-            <div
-              key={stat.id}
-              className="group relative flex flex-col justify-between bg-white hover:bg-slate-50/80 shadow-sm hover:shadow-xl p-5 sm:p-6 md:p-8 border border-slate-100 hover:border-teal-200/80 rounded-2xl transition-all hover:-translate-y-1.5 duration-300 transform"
-            >
-              <div>
-                {/* Icon Container with Smooth Hover Transition */}
+        {/* Main Glassmorphism Wrapper */}
+        <div className="bg-white/5 shadow-2xl backdrop-blur-xl p-8 sm:p-12 border border-white/10 rounded-3xl">
+          <div className="gap-8 sm:gap-6 grid grid-cols-2 lg:grid-cols-4 sm:divide-x divide-y sm:divide-y-0 divide-white/10">
+            {stats.map((stat, index) => (
+              <div
+                key={stat.id}
+                className={`group flex flex-col items-center text-center ${
+                  index !== 0 ? "pt-6 sm:pt-0" : ""
+                }`}
+              >
+                {/* Glowing Icon Container */}
                 <div
-                  className={`w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-2xl border ${stat.bgColor} ${stat.hoverBg} flex items-center justify-center text-xl sm:text-2xl md:text-3xl mb-5 sm:mb-6 shadow-sm group-hover:scale-110 group-hover:rotate-6 transition-all duration-300`}
+                  className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl border ${stat.iconBg} flex items-center justify-center text-xl sm:text-2xl mb-4 shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300`}
                 >
                   {stat.icon}
                 </div>
 
-                {/* Animated Counter Value */}
-                <h3 className="mb-1.5 font-extrabold text-slate-900 group-hover:text-[#0D9488] text-2xl sm:text-3xl md:text-4xl tracking-tight transition-colors duration-200">
+                {/* Counter */}
+                <h3 className="mb-1 font-black text-amber-400 group-hover:text-amber-300 text-3xl sm:text-4xl md:text-5xl tracking-tight transition-colors">
                   {inView ? (
                     <CountUp
                       start={0}
@@ -88,17 +85,12 @@ const StatsSection = () => {
                 </h3>
 
                 {/* Label */}
-                <p className="font-semibold text-slate-500 text-xs sm:text-sm uppercase tracking-wider">
+                <p className="font-semibold text-slate-300 text-xs sm:text-sm uppercase tracking-wider">
                   {stat.label}
                 </p>
               </div>
-
-              {/* Animated Bottom Bar Effect */}
-              <div className="bg-slate-100 mt-5 sm:mt-6 rounded-full w-full h-1 overflow-hidden">
-                <div className="bg-[#0D9488] w-full h-full transition-transform -translate-x-full group-hover:translate-x-0 duration-500 ease-out" />
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>
