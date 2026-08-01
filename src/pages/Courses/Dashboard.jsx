@@ -6,7 +6,6 @@ import {
   FaTrashAlt,
   FaPlus,
   FaBookOpen,
-  FaGraduationCap,
   FaSearch,
 } from "react-icons/fa";
 import { AuthContext } from "../../context/AuthProvider";
@@ -21,17 +20,18 @@ const Dashboard = () => {
   const location = useLocation();
 
   useEffect(() => {
-    if (!user?.email) return;
+    if (!user) return;
 
     fetch("https://skill-path-server-five.vercel.app/courses")
       .then((res) => res.json())
       .then((data) => {
-        // Filter courses added by current user
+        // Filter courses added by current user (by email or displayName)
         const myCourses = data.filter(
           (course) =>
-            course.email === user.email ||
-            course.instructorName === user.email ||
-            course.instructorEmail === user.email
+            (user.email && course.email === user.email) ||
+            (user.email && course.instructorEmail === user.email) ||
+            (user.email && course.instructorName === user.email) ||
+            (user.displayName && course.instructorName === user.displayName)
         );
         setCourses(myCourses);
       })

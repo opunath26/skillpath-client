@@ -35,6 +35,7 @@ const AddCourse = () => {
       price: form.price.value,
       duration: form.duration.value,
       rating: form.rating.value || "5.0",
+      email: user?.email || form.instructorEmail.value,
       instructorName: form.instructorName.value || user?.displayName || "Anonymous Instructor",
       instructorEmail: form.instructorEmail.value || user?.email || "",
       instructorPhoto: form.instructorPhoto.value || user?.photoURL || "https://i.ibb.co/mJR9n0K/user-placeholder.png",
@@ -192,7 +193,7 @@ const AddCourse = () => {
             </div>
           </div>
 
-          {/* Section 2: Instructor Info */}
+          {/* Section 2: Instructor Details */}
           <div className="space-y-4 pt-2">
             <h3 className="pb-2 border-slate-100 border-b font-extrabold text-slate-800 text-base">
               2. Instructor Details
