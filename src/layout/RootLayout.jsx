@@ -6,14 +6,20 @@ import { Toaster } from 'react-hot-toast';
 
 const RootLayout = () => {
     return (
-        <div className='mx-auto max-w-7xl'>
+        <div className='flex flex-col bg-slate-50/50 min-h-screen font-sans text-slate-800'>
+            {/* Sticky/Header Navbar */}
             <Navbar></Navbar>
-            <div className='mt-4'>
+
+            {/* Dynamic Pages Render Area */}
+            <main className='flex-grow'>
                 <Outlet></Outlet>
-            </div>
+            </main>
+
+            {/* Footer */}
             <Footer></Footer>
 
-            <Toaster />
+            {/* Toast Notifications */}
+            <Toaster position="top-center" reverseOrder={false} />
         </div>
     );
 };
