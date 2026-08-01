@@ -6,17 +6,17 @@ import { Toaster } from 'react-hot-toast';
 
 const RootLayout = () => {
     return (
-        <div className='flex flex-col bg-slate-50/50 min-h-screen font-sans text-slate-800'>
+        <div className='flex flex-col min-h-screen font-sans'>
             {/* Sticky/Header Navbar */}
-            <Navbar></Navbar>
+            <Navbar />
 
             {/* Dynamic Pages Render Area */}
-            <main className='flex-grow'>
-                <Outlet></Outlet>
+            <main className='flex-grow mx-auto px-4 sm:px-6 lg:px-8 w-full max-w-7xl'>
+                <Outlet />
             </main>
 
             {/* Footer */}
-            <Footer></Footer>
+            <Footer />
 
             {/* Toast Notifications */}
             <Toaster position="top-center" reverseOrder={false} />
