@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router";
 import {
   FaUsers,
@@ -11,10 +11,10 @@ import {
   FaShareAlt,
   FaBookOpen,
   FaUserGraduate,
-  FaQuoteLeft,
   FaLock,
   FaFileAlt,
   FaComments,
+  FaSpinner,
 } from "react-icons/fa";
 import { AuthContext } from "../../context/AuthProvider.jsx";
 import Spinner from "../../components/Spinner.jsx";
@@ -27,6 +27,35 @@ const CourseDetails = () => {
 
   // Active Tab State (Interactive Tabbed Layout)
   const [activeTab, setActiveTab] = useState("overview");
+
+  // Enrollment Checking States
+  const [isEnrolled, setIsEnrolled] = useState(false);
+  const [checkingEnroll, setCheckingEnroll] = useState(true);
+
+  // Check if current user is already enrolled in this course
+  useEffect(() => {
+    if (user?.email && course?._id) {
+      setCheckingEnroll(true);
+      fetch(`https://skill-path-server-five.vercel.app/enrollments?email=${user.email}`)
+        .then((res) => res.json())
+        .then((data) => {
+          // Check if any enrollment matches current course ID
+          const enrolledList = Array.isArray(data) ? data : data?.result || [];
+          const matched = enrolledList.some(
+            (item) => item.courseId === course._id || item.course?._id === course._id
+          );
+          setIsEnrolled(matched);
+        })
+        .catch((err) => {
+          console.error("Error checking enrollment status:", err);
+        })
+        .finally(() => {
+          setCheckingEnroll(false);
+        });
+    } else {
+      setCheckingEnroll(false);
+    }
+  }, [user?.email, course?._id]);
 
   if (!course) {
     return (
@@ -45,7 +74,7 @@ const CourseDetails = () => {
     course.image ||
     "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=800";
 
-  // Mock Reviews Data (5-7 Reviews)
+  // Mock Reviews Data
   const reviews = [
     {
       id: 1,
@@ -53,7 +82,7 @@ const CourseDetails = () => {
       role: "Frontend Developer",
       rating: 5,
       comment:
-        "কোড কোয়ালিটি এবং কনসেপ্ট বোঝানোর নিয়ম অসাধারণ ছিল! প্রজেক্টগুলো সরাসরি পোর্টফোলিওতে যোগ করার মতো।",
+        "কোড কোয়ালিটি এবং কনসেপ্ট বোঝানোর নিয়ম অসাধারণ ছিল! প্রজেক্টগুলো সরাসরি পোর্টফোলিওতে যোগ করার মতো।",
       avatar: "https://i.pravatar.cc/150?img=11",
     },
     {
@@ -62,7 +91,7 @@ const CourseDetails = () => {
       role: "UI/UX Student",
       rating: 5,
       comment:
-        "খুবই গোছানো কোর্স। বিগিনার থেকে এডভান্সড বিষয়গুলো ধাপে ধাপে সুন্দরভাবে কভার করা হয়েছে।",
+        "খুবই গোছানো কোর্স। বিগিনার থেকে এডভান্সড বিষয়গুলো ধাপে ধাপে সুন্দরভাবে কভার করা হয়েছে।",
       avatar: "https://i.pravatar.cc/150?img=5",
     },
     {
@@ -71,7 +100,7 @@ const CourseDetails = () => {
       role: "Junior Software Engineer",
       rating: 5,
       comment:
-        "ইন্সট্রাক্টরের সাপোর্ট চমৎকার। জব ইন্টারভিউয়ের জন্য দরকারি প্র্যাকটিক্যাল জ্ঞান পেয়েছি।",
+        "ইন্সট্রাক্টরের সাপোর্ট চমৎকার। জব ইন্টারভিউয়ের জন্য দরকারি প্র্যাকটিক্যাল জ্ঞান পেয়েছি।",
       avatar: "https://i.pravatar.cc/150?img=12",
     },
     {
@@ -80,7 +109,7 @@ const CourseDetails = () => {
       role: "Full Stack Learner",
       rating: 4,
       comment:
-        "কোর্সের মেটেরিয়াল অনেক রিসোর্সফুল। রিয়েল-ওয়ার্ল্ড প্রজেক্ট শিখতে চাইলে বেস্ট হবে।",
+        "কোর্সের মেটেরিয়াল অনেক রিসোর্সফুল। রিয়েল-ওয়ার্ল্ড প্রজেক্ট শিখতে চাইলে বেস্ট হবে।",
       avatar: "https://i.pravatar.cc/150?img=33",
     },
     {
@@ -89,7 +118,7 @@ const CourseDetails = () => {
       role: "Web Designer",
       rating: 5,
       comment:
-        "একদম সঠিক দিকনির্দেশনা পেয়েছি। কোর্সটি শেষ করে কাজের প্রতি আত্মবিশ্বাস অনেক বেড়েছে।",
+        "একদম সঠিক দিকনির্দেশনা পেয়েছি। কোর্সটি শেষ করে কাজের প্রতি আত্মবিশ্বাস অনেক বেড়েছে।",
       avatar: "https://i.pravatar.cc/150?img=20",
     },
     {
@@ -98,14 +127,14 @@ const CourseDetails = () => {
       role: "CSE Student",
       rating: 5,
       comment:
-        "বেসিক কনসেপ্ট ক্লিয়ার করার জন্য অসাধারণ একটি কোর্স। যে কারও জন্যই ভীষণ হেল্পফুল হবে।",
+        "বেসিক কনসেপ্ট ক্লিয়ার করার জন্য অসাধারণ একটি কোর্স। যে কারও জন্যই ভীষণ হেল্পফুল হবে।",
       avatar: "https://i.pravatar.cc/150?img=15",
     },
   ];
 
   return (
     <div className="bg-slate-50/50 min-h-screen font-sans text-slate-800">
-      {/*  Full-Width Header with Light Glassmorphism */}
+      {/* Full-Width Header */}
       <header className="relative bg-gradient-to-r from-teal-900 via-slate-900 to-slate-900 py-12 md:py-16 overflow-hidden text-white">
         <div className="top-0 right-0 absolute bg-teal-500/10 blur-3xl rounded-full w-96 h-96 pointer-events-none" />
 
@@ -180,14 +209,14 @@ const CourseDetails = () => {
         </div>
       </header>
 
-      {/*  Main Body (Full Width Layout with Floating Sidebar) */}
+      {/* Main Body */}
       <main className="mx-auto px-4 md:px-8 py-10 max-w-7xl container">
         <div className="items-start gap-10 grid lg:grid-cols-12">
           
-          {/* Left Side: Interactive Tabs & Content (8 Cols) */}
+          {/* Left Side: Interactive Tabs & Content */}
           <div className="space-y-8 lg:col-span-8">
             
-            {/*  Interactive Tab Buttons */}
+            {/* Interactive Tab Buttons */}
             <div className="flex items-center gap-2 bg-white/80 shadow-sm backdrop-blur-md p-1.5 border border-slate-200/80 rounded-2xl">
               <button
                 onClick={() => setActiveTab("overview")}
@@ -223,7 +252,7 @@ const CourseDetails = () => {
               </button>
             </div>
 
-            {/*  Tab Content Window */}
+            {/* Tab Content Window */}
             <div className="bg-white/80 shadow-sm backdrop-blur-md p-6 md:p-8 border border-slate-200/80 rounded-3xl min-h-[300px]">
               
               {/* TAB 1: OVERVIEW */}
@@ -259,7 +288,7 @@ const CourseDetails = () => {
                 </div>
               )}
 
-              {/* TAB 2: CURRICULUM / MODULES */}
+              {/* TAB 2: CURRICULUM */}
               {activeTab === "curriculum" && (
                 <div className="space-y-4">
                   <h3 className="mb-2 font-extrabold text-slate-900 text-xl">
@@ -326,7 +355,7 @@ const CourseDetails = () => {
               )}
             </div>
 
-            {/*  Student Reviews Section (5-7 Reviews) */}
+            {/* Student Reviews Section */}
             <div className="bg-white/80 shadow-sm backdrop-blur-md p-6 md:p-8 border border-slate-200/80 rounded-3xl">
               <div className="flex justify-between items-center mb-6">
                 <div>
@@ -374,11 +403,11 @@ const CourseDetails = () => {
 
           </div>
 
-          {/* Right Side: Clean Image Card & Checkout (4 Cols) */}
+          {/* Right Side: Clean Image Card & Checkout */}
           <div className="top-8 lg:sticky lg:col-span-4">
             <div className="bg-white/90 shadow-slate-200/50 shadow-xl backdrop-blur-md p-5 border border-slate-200/80 rounded-3xl overflow-hidden">
               
-              {/* Thumbnail Image Box (No Video Icon) */}
+              {/* Thumbnail Image Box */}
               <div className="mb-5 border border-slate-100 rounded-2xl aspect-video overflow-hidden">
                 <img
                   src={courseImage}
@@ -406,13 +435,29 @@ const CourseDetails = () => {
                 </div>
               </div>
 
-              {/* Enrollment Button */}
-              <button
-                onClick={handleEnroll}
-                className="bg-teal-600 hover:bg-teal-700 active:bg-teal-800 shadow-lg shadow-teal-600/20 mb-5 py-3.5 rounded-2xl w-full font-bold text-white text-base active:scale-[0.98] transition-all cursor-pointer"
-              >
-                Enroll Now
-              </button>
+              {/* Dynamic Enrollment Button Condition */}
+              {checkingEnroll ? (
+                <button
+                  disabled
+                  className="flex justify-center items-center gap-2 bg-slate-100 mb-5 py-3.5 border border-slate-200 rounded-2xl w-full font-bold text-slate-400 cursor-not-allowed"
+                >
+                  <FaSpinner className="text-teal-600 animate-spin" /> Checking Status...
+                </button>
+              ) : isEnrolled ? (
+                <button
+                  disabled
+                  className="flex justify-center items-center gap-2 bg-slate-200/80 shadow-inner mb-5 py-3.5 border border-slate-300 rounded-2xl w-full font-extrabold text-slate-600 text-base cursor-not-allowed"
+                >
+                  <FaCheckCircle className="text-teal-600" /> Already Enrolled
+                </button>
+              ) : (
+                <button
+                  onClick={handleEnroll}
+                  className="bg-teal-600 hover:bg-teal-700 active:bg-teal-800 shadow-lg shadow-teal-600/20 mb-5 py-3.5 rounded-2xl w-full font-bold text-white text-base active:scale-[0.98] transition-all cursor-pointer"
+                >
+                  Enroll Now
+                </button>
+              )}
 
               <hr className="mb-5 border-slate-100" />
 
